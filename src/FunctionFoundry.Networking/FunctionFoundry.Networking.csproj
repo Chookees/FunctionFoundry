@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <RootNamespace>FunctionFoundry.Networking</RootNamespace>
+    <AssemblyName>FunctionFoundry.Networking</AssemblyName>
+    <PackageId>FunctionFoundry.Networking</PackageId>
+    <Description>Resumable and integrity-aware HTTP transfers: parallel range downloads, mirror selection, transfer planning, and streaming verification.</Description>
+    <PackageTags>functionfoundry;networking;download;integrity;mirror;http-range</PackageTags>
+    <PackageReleaseNotes>Initial release of FunctionFoundry.Networking capabilities.</PackageReleaseNotes>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>
