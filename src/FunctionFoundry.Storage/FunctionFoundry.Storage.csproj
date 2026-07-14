@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <RootNamespace>FunctionFoundry.Storage</RootNamespace>
+    <AssemblyName>FunctionFoundry.Storage</AssemblyName>
+    <PackageId>FunctionFoundry.Storage</PackageId>
+    <Description>Transactional file-set writes, content-addressed storage, content-defined chunking, and Merkle directory snapshots for reliable local persistence.</Description>
+    <PackageTags>functionfoundry;storage;transactional;cass;cdc;merkle;crash-recovery</PackageTags>
+    <PackageReleaseNotes>Initial release of FunctionFoundry.Storage capabilities.</PackageReleaseNotes>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="FunctionFoundry.Storage.Tests" />
+  </ItemGroup>
+
+</Project>
