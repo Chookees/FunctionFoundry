@@ -33,5 +33,5 @@ public class DataBenchmarks
     public StructuralTreeDiffResult StructuralDiff() => StructuralTreeDiff.Diff(_left, _right);
 
     [Benchmark]
-    public ThreeWayMergeResult ThreeWayMerge() => ThreeWayMerge.Merge(_base, _local, _remote);
+    public ThreeWayMergeResult RunThreeWayMerge() => FunctionFoundry.Data.ThreeWayMerge.Merge(_base, _local, _remote);
 }

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <RootNamespace>FunctionFoundry.Scheduling</RootNamespace>
+    <AssemblyName>FunctionFoundry.Scheduling</AssemblyName>
+    <PackageId>FunctionFoundry.Scheduling</PackageId>
+    <Description>Scheduling and calendar algorithms: interval-set algebra, recurring availability resolution, business calendars, and critical-path scheduling.</Description>
+    <PackageTags>functionfoundry;scheduling;calendar;intervals;critical-path</PackageTags>
+    <PackageReleaseNotes>Initial release of FunctionFoundry.Scheduling capabilities.</PackageReleaseNotes>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>
