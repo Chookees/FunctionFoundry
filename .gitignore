@@ -42,3 +42,7 @@ BenchmarkDotNet.Artifacts/
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json.example
+
+# Allow documentation under docs/packages (NuGet packages live in artifacts/packages)
+!docs/packages/
+!docs/packages/**
