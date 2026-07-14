@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <RootNamespace>FunctionFoundry.Text</RootNamespace>
+    <AssemblyName>FunctionFoundry.Text</AssemblyName>
+    <PackageId>FunctionFoundry.Text</PackageId>
+    <Description>Unicode spoof detection, secret candidate scanning, near-duplicate text indexing, and delimited-text dialect inference.</Description>
+    <PackageTags>functionfoundry;text;unicode;secrets;minhash;dialect</PackageTags>
+    <PackageReleaseNotes>Initial release of FunctionFoundry.Text capabilities.</PackageReleaseNotes>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>
