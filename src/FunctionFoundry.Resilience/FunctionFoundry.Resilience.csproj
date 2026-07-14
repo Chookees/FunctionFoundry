@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <RootNamespace>FunctionFoundry.Resilience</RootNamespace>
+    <AssemblyName>FunctionFoundry.Resilience</AssemblyName>
+    <PackageId>FunctionFoundry.Resilience</PackageId>
+    <Description>Adaptive execution mechanisms: AIMD concurrency control, hedged execution, monotonic execution budgets, and checkpointed batch processing.</Description>
+    <PackageTags>functionfoundry;resilience;concurrency;hedging;execution-budget;checkpoint</PackageTags>
+    <PackageReleaseNotes>Initial release of FunctionFoundry.Resilience capabilities.</PackageReleaseNotes>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>
