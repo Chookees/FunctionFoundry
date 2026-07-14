@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <RootNamespace>FunctionFoundry.Data</RootNamespace>
+    <AssemblyName>FunctionFoundry.Data</AssemblyName>
+    <PackageId>FunctionFoundry.Data</PackageId>
+    <Description>Bounded-memory data processing: external merge sort, structural tree diff, three-way merge with explicit conflicts, and temporal interval joins.</Description>
+    <PackageTags>functionfoundry;data;merge-sort;tree-diff;three-way-merge;interval-join</PackageTags>
+    <PackageReleaseNotes>Initial release of FunctionFoundry.Data capabilities.</PackageReleaseNotes>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>
