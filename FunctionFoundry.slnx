@@ -1,15 +1,27 @@
 <Solution>
   <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/FunctionFoundry.Integrity.Benchmarks/FunctionFoundry.Integrity.Benchmarks.csproj" />
+    <Project Path="benchmarks/FunctionFoundry.Observability.Benchmarks/FunctionFoundry.Observability.Benchmarks.csproj" />
     <Project Path="benchmarks/FunctionFoundry.Security.Benchmarks/FunctionFoundry.Security.Benchmarks.csproj" />
+    <Project Path="benchmarks/FunctionFoundry.Storage.Benchmarks/FunctionFoundry.Storage.Benchmarks.csproj" />
   </Folder>
   <Folder Name="/samples/">
+    <Project Path="samples/FunctionFoundry.Integrity.Sample/FunctionFoundry.Integrity.Sample.csproj" />
+    <Project Path="samples/FunctionFoundry.Observability.Sample/FunctionFoundry.Observability.Sample.csproj" />
     <Project Path="samples/FunctionFoundry.Security.Sample/FunctionFoundry.Security.Sample.csproj" />
+    <Project Path="samples/FunctionFoundry.Storage.Sample/FunctionFoundry.Storage.Sample.csproj" />
   </Folder>
   <Folder Name="/src/">
+    <Project Path="src/FunctionFoundry.Integrity/FunctionFoundry.Integrity.csproj" />
+    <Project Path="src/FunctionFoundry.Observability/FunctionFoundry.Observability.csproj" />
     <Project Path="src/FunctionFoundry.Security/FunctionFoundry.Security.csproj" />
+    <Project Path="src/FunctionFoundry.Storage/FunctionFoundry.Storage.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/FunctionFoundry.Engineering.Tests/FunctionFoundry.Engineering.Tests.csproj" />
+    <Project Path="tests/FunctionFoundry.Integrity.Tests/FunctionFoundry.Integrity.Tests.csproj" />
+    <Project Path="tests/FunctionFoundry.Observability.Tests/FunctionFoundry.Observability.Tests.csproj" />
     <Project Path="tests/FunctionFoundry.Security.Tests/FunctionFoundry.Security.Tests.csproj" />
+    <Project Path="tests/FunctionFoundry.Storage.Tests/FunctionFoundry.Storage.Tests.csproj" />
   </Folder>
 </Solution>

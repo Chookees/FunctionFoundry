@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <RootNamespace>FunctionFoundry.Integrity</RootNamespace>
+    <AssemblyName>FunctionFoundry.Integrity</AssemblyName>
+    <PackageId>FunctionFoundry.Integrity</PackageId>
+    <Description>Deterministic integrity primitives: canonical JSON, streaming hash manifests, Merkle trees with inclusion proofs, and tamper-evident hash chains.</Description>
+    <PackageTags>functionfoundry;integrity;canonical-json;merkle;hash-chain;manifest</PackageTags>
+    <PackageReleaseNotes>Initial release of FunctionFoundry.Integrity capabilities.</PackageReleaseNotes>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>
