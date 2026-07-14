@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* `FunctionFoundry.Security` — envelope encryption, deterministic pseudonymization, Shamir secret sharing, key rotation planning.
 * Repository engineering foundation (SDK pinning, build configuration, CI, documentation conventions).
-* Planned core packages for Features FF-F01 and FF-F02 (see [ROADMAP.md](ROADMAP.md)).
 
 ## Release plan
 

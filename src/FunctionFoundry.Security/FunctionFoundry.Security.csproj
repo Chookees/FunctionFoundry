@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <RootNamespace>FunctionFoundry.Security</RootNamespace>
+    <AssemblyName>FunctionFoundry.Security</AssemblyName>
+    <PackageId>FunctionFoundry.Security</PackageId>
+    <Description>Secure orchestration built from established cryptographic primitives: versioned envelope encryption, deterministic HMAC pseudonymization, Shamir threshold secret sharing, and key rotation planning.</Description>
+    <PackageTags>functionfoundry;security;aes-gcm;shamir;pseudonymization;envelope-encryption</PackageTags>
+    <PackageReleaseNotes>Initial release of FunctionFoundry.Security capabilities.</PackageReleaseNotes>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>

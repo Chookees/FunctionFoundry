@@ -8,39 +8,42 @@ FF-F01 — Secure and Reliable Foundations
 
 ## Current PBI
 
-Starting PBI-02 — Security package
+PBI-02 Security completing; next Storage.
 
 ## Completed Tasks
 
-* PBI-01 complete and squashed to main
+* PBI-01 squashed to main (`86bc024`)
+* PBI-02 Security implementation, tests, sample, benchmarks, pack
 
 ## Remaining Tasks
 
-* PBI-02 through PBI-12 (see ROADMAP.md)
+* PBI-03 through PBI-12
 
 ## Last successful commands
 
-* `dotnet build -c Release` / `dotnet test -c Release` (3 passed) during PBI-01
-* Squash commit on main: `build(repo): establish FunctionFoundry engineering foundation [PBI-01]`
+* `dotnet build -c Release` (0 warnings/errors after benchmark NoWarn)
+* `dotnet test -c Release` — Security 12 + Engineering 3 passed
+* `dotnet pack` — FunctionFoundry.Security.1.0.0-local.nupkg with readme + XML docs
 
 ## Last successful commit
 
 * PBI-01: `86bc0240b165fd4d2fbe427997baa26604cd98ac`
+* PBI-02: pending squash
 
 ## Open technical risks
 
-* Large remaining algorithm scope across nine packaging PBIs
-* Package validation baseline empty until first packable libraries land
+* Remaining package volume is large
+* AnalysisMode=All is strict; samples/benchmarks use targeted NoWarn
 
 ## Decisions made
 
-* See ADRs 0001-0004
-* Smoke pipeline package removed after proof; Engineering.Tests retained
+* ADR-0005 security threat model / BCL primitives only
+* No third-party runtime dependencies in Security
 
 ## Known deviations
 
-* Cloud agent branches use `cursor/pbi-XX-...-482e` while producing squash commits on `main` per PBI
+* Cloud branches: `cursor/pbi-XX-...-482e`
 
 ## Exact next action
 
-Implement FunctionFoundry.Security (PBI-02) end-to-end.
+Squash PBI-02 to main; implement PBI-03 Storage.

@@ -1,5 +1,15 @@
 <Solution>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/FunctionFoundry.Security.Benchmarks/FunctionFoundry.Security.Benchmarks.csproj" />
+  </Folder>
+  <Folder Name="/samples/">
+    <Project Path="samples/FunctionFoundry.Security.Sample/FunctionFoundry.Security.Sample.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/FunctionFoundry.Security/FunctionFoundry.Security.csproj" />
+  </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/FunctionFoundry.Engineering.Tests/FunctionFoundry.Engineering.Tests.csproj" />
+    <Project Path="tests/FunctionFoundry.Security.Tests/FunctionFoundry.Security.Tests.csproj" />
   </Folder>
 </Solution>

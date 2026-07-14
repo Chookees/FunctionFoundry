@@ -34,7 +34,7 @@
 
   <PropertyGroup Condition="'$(IsTestProject)' == 'true' or $(MSBuildProjectName.EndsWith('.Tests')) or $(MSBuildProjectName.Contains('.Benchmarks')) or $(MSBuildProjectDirectory.Contains('/samples/')) or $(MSBuildProjectDirectory.Contains('\\samples\\'))">
     <IsPackable>false</IsPackable>
-    <NoWarn>$(NoWarn);CS1591;CA1707</NoWarn>
+    <NoWarn>$(NoWarn);CS1591;CA1707;CA1812;CA1515;CA1050;IDE0005</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(IsPackable)' == 'true'">
@@ -43,8 +43,4 @@
     <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
     <EnablePackageValidation>true</EnablePackageValidation>
   </PropertyGroup>
-
-  <ItemGroup Condition="'$(IsPackable)' == 'true' and Exists('PACKAGE.md')">
-    <None Include="PACKAGE.md" Pack="true" PackagePath="\" />
-  </ItemGroup>
 </Project>

@@ -1,5 +1,14 @@
 <Project>
   <!-- Repository-wide targets for FunctionFoundry packages. -->
+  <PropertyGroup Condition="'$(IsPackable)' == 'true'">
+    <PackageReadmeFile Condition="'$(PackageReadmeFile)' == ''">PACKAGE.md</PackageReadmeFile>
+    <EnablePackageValidation Condition="'$(EnablePackageValidation)' == ''">true</EnablePackageValidation>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsPackable)' == 'true' and Exists('$(MSBuildProjectDirectory)/PACKAGE.md')">
+    <None Include="PACKAGE.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
   <Target Name="ValidateNoForbiddenPackageNames" BeforeTargets="Build"
           Condition="'$(IsPackable)' == 'true'">
     <Error
