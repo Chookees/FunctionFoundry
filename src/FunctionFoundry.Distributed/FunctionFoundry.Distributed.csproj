@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <RootNamespace>FunctionFoundry.Distributed</RootNamespace>
+    <AssemblyName>FunctionFoundry.Distributed</AssemblyName>
+    <PackageId>FunctionFoundry.Distributed</PackageId>
+    <Description>Reusable distributed coordination algorithms: weighted rendezvous hashing, version clocks, phi-accrual failure detection, and quorum result aggregation.</Description>
+    <PackageTags>functionfoundry;distributed;consistent-hashing;vector-clock;failure-detector;quorum</PackageTags>
+    <PackageReleaseNotes>Initial release of FunctionFoundry.Distributed capabilities.</PackageReleaseNotes>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>
