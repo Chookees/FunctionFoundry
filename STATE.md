@@ -8,55 +8,39 @@ FF-F01 — Secure and Reliable Foundations
 
 ## Current PBI
 
-PBI-01 complete; preparing squash to main, then PBI-02.
+Starting PBI-02 — Security package
 
 ## Completed Tasks
 
-* T01-01 Pin SDK via `global.json` (`rollForward: disable`)
-* T01-02 Directory.Build.props/targets, Directory.Packages.props, .editorconfig, FunctionFoundry.slnx
-* T01-03 README, CONTRIBUTING, SECURITY, LICENSE, CHANGELOG
-* T01-04 ADR template + ADR-0001..0004
-* T01-05 Test conventions; temporary smoke package proved pipeline then removed; Engineering.Tests remain
-* T01-06 GitHub Actions CI workflow
-* T01-07 Package validation / Source Link config in Directory.Build.props
-* T01-08 Smoke package removed; STATE/ROADMAP finalized for PBI-01
+* PBI-01 complete and squashed to main
 
 ## Remaining Tasks
 
-* Squash PBI-01 to main
-* Begin PBI-02 Security package
+* PBI-02 through PBI-12 (see ROADMAP.md)
 
 ## Last successful commands
 
-* `dotnet --version` → `10.0.301`
-* `dotnet restore`
-* `dotnet build -c Release` (0 warnings, 0 errors)
-* `dotnet test -c Release` (3 passed)
-* `dotnet pack -c Release` (no packable projects yet — expected)
-* `dotnet format --verify-no-changes`
-* Verified CS1591 fails build when public XML docs missing
+* `dotnet build -c Release` / `dotnet test -c Release` (3 passed) during PBI-01
+* Squash commit on main: `build(repo): establish FunctionFoundry engineering foundation [PBI-01]`
 
 ## Last successful commit
 
-* (pending PBI-01 squash)
+* PBI-01: `86bc0240b165fd4d2fbe427997baa26604cd98ac`
 
 ## Open technical risks
 
-* No packable library yet until PBI-02
-* Package validation baseline starts with first released packages
+* Large remaining algorithm scope across nine packaging PBIs
+* Package validation baseline empty until first packable libraries land
 
 ## Decisions made
 
-* Prefix `FunctionFoundry` (ADR-0001)
-* Modular independent libraries; no FunctionProvider copy (ADR-0002)
-* SDK 10.0.301 pinned (ADR-0003)
-* Zero third-party runtime deps by default (ADR-0004)
-* Smoke package removed after pipeline proof; engineering tests validate pinning/docs settings
+* See ADRs 0001-0004
+* Smoke pipeline package removed after proof; Engineering.Tests retained
 
 ## Known deviations
 
-* Cloud agent PBI branches use `cursor/pbi-XX-...-482e` naming required by the agent environment while retaining squash-to-main PBI workflow.
+* Cloud agent branches use `cursor/pbi-XX-...-482e` while producing squash commits on `main` per PBI
 
 ## Exact next action
 
-Commit PBI-01 tasks, squash to main, start PBI-02 Security implementation.
+Implement FunctionFoundry.Security (PBI-02) end-to-end.
