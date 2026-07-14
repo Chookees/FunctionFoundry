@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <RootNamespace>FunctionFoundry.Observability</RootNamespace>
+    <AssemblyName>FunctionFoundry.Observability</AssemblyName>
+    <PackageId>FunctionFoundry.Observability</PackageId>
+    <Description>Logging-framework-neutral observability primitives: sensitive-data redaction, stable event fingerprinting, adaptive sampling, and burst coalescing.</Description>
+    <PackageTags>functionfoundry;observability;redaction;fingerprinting;sampling;logging</PackageTags>
+    <PackageReleaseNotes>Initial release of FunctionFoundry.Observability capabilities.</PackageReleaseNotes>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>
