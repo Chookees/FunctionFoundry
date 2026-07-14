@@ -1,0 +1,44 @@
+## Build
+bin/
+obj/
+artifacts/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+.idea/
+*.DotSettings.user
+
+## Test / coverage
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+coverage.json
+coverage.cobertura.xml
+
+## NuGet
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+
+## OS
+.DS_Store
+Thumbs.db
+
+## Benchmarks
+BenchmarkDotNet.Artifacts/
+
+## Secrets / local
+*.pfx
+*.snk
+.env
+.env.*
+!.env.example
+
+## Rider / VS Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json.example

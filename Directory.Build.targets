@@ -1,0 +1,9 @@
+<Project>
+  <!-- Repository-wide targets for FunctionFoundry packages. -->
+  <Target Name="ValidateNoForbiddenPackageNames" BeforeTargets="Build"
+          Condition="'$(IsPackable)' == 'true'">
+    <Error
+      Condition="$(PackageId.EndsWith('.All')) or $(PackageId.EndsWith('.Common')) or $(PackageId.EndsWith('.Utils')) or $(PackageId.EndsWith('.Helpers'))"
+      Text="Forbidden aggregate/utility package id: $(PackageId)" />
+  </Target>
+</Project>
