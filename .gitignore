@@ -2,6 +2,7 @@
 bin/
 obj/
 artifacts/
+Release/
 *.user
 *.suo
 *.userosscache
