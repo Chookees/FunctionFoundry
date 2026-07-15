@@ -47,13 +47,23 @@ dotnet test -c Release
 dotnet pack -c Release
 ```
 
+To produce a top-level `Release/` folder with library binaries and NuGet packages:
+
+```bash
+# Linux / macOS
+./build/publish-release.sh
+
+# Windows
+build\publish-release.cmd
+```
+
 Coverage (optional):
 
 ```bash
 dotnet test -c Release --collect:"XPlat Code Coverage" --results-directory ./artifacts/test-results
 ```
 
-Package artifacts are written to `artifacts/packages/`. Full coverage breakdown: [docs/coverage-summary.md](docs/coverage-summary.md).
+Intermediate build outputs remain under `artifacts/`. Release deliverables are copied to `Release/` (gitignored). Coverage breakdown: [docs/coverage-summary.md](docs/coverage-summary.md).
 
 ## Design principles
 
