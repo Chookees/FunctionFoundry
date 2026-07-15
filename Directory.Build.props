@@ -28,11 +28,20 @@
     <PackageOutputPath>$(ArtifactsPath)/packages</PackageOutputPath>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  <!-- ZIP / source-archive builds have no .git folder; disable SourceLink queries to avoid warnings. -->
+  <PropertyGroup Condition="!Exists('$(MSBuildThisFileDirectory).git')">
+    <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
+    <EnableSourceLink>false</EnableSourceLink>
+    <EmbedUntrackedSources>false</EmbedUntrackedSources>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(IsTestProject)' == 'true' or $(MSBuildProjectName.EndsWith('.Tests')) or $(MSBuildProjectName.Contains('.Benchmarks')) or $(MSBuildProjectDirectory.Contains('/samples/')) or $(MSBuildProjectDirectory.Contains('\\samples\\'))">
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- Normalize path separators so Windows ZIP checkouts match /samples/ detection. -->
+    <_NormalizedProjectDir>$([System.String]::Copy('$(MSBuildProjectDirectory)').Replace('\', '/'))</_NormalizedProjectDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true' or $(MSBuildProjectName.EndsWith('.Tests')) or $(MSBuildProjectName.EndsWith('.Sample')) or $(MSBuildProjectName.Contains('.Benchmarks')) or $(_NormalizedProjectDir.Contains('/samples/')) or $(_NormalizedProjectDir.Contains('/benchmarks/')) or $(_NormalizedProjectDir.Contains('/tests/'))">
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);CS1591;CA1707;CA1812;CA1515;CA1050;IDE0005</NoWarn>
   </PropertyGroup>
