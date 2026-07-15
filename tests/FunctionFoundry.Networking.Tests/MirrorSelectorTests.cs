@@ -36,4 +36,18 @@ public sealed class MirrorSelectorTests
         Assert.InRange(evidence.Score, 0, 1);
         Assert.True(evidence.LatencyScore > 0);
     }
+
+    [Fact]
+    public void Select_throws_when_no_candidates()
+    {
+        var selector = new MirrorSelector();
+        Assert.Throws<ArgumentException>(() => selector.Select([]));
+    }
+
+    [Fact]
+    public void Options_validate_rejects_weights_that_do_not_sum_to_one()
+    {
+        var options = new MirrorSelectorOptions { LatencyWeight = 0.5, ThroughputWeight = 0.5, AvailabilityWeight = 0.5, IntegrityWeight = 0.5 };
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.Validate());
+    }
 }

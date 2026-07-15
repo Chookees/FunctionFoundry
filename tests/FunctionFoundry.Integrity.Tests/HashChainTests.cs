@@ -73,4 +73,13 @@ public sealed class HashChainTests
         Assert.Equal(canonical, body);
         Assert.DoesNotContain("recordHash", Encoding.UTF8.GetString(body), StringComparison.Ordinal);
     }
+
+    [Fact]
+    public void Verify_empty_chain_is_invalid()
+    {
+        HashChainVerificationResult result = HashChain.Verify([]);
+        Assert.False(result.IsValid);
+        Assert.Equal(-1, result.FirstInvalidRecord?.Sequence);
+        Assert.Contains("at least one", result.FirstInvalidRecord?.Reason ?? string.Empty, StringComparison.OrdinalIgnoreCase);
+    }
 }

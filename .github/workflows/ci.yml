@@ -45,11 +45,38 @@ jobs:
         run: dotnet build -c Release --no-restore
 
       - name: Test with coverage
-        run: >
-          dotnet test -c Release --no-build
-          --collect:"XPlat Code Coverage"
-          --results-directory ./artifacts/test-results
-          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+        run: |
+          set +e
+          FAILURES=0
+          RESULTS_DIR=./artifacts/test-results
+          LOG="$RESULTS_DIR/test-output.log"
+          mkdir -p "$RESULTS_DIR"
+          : > "$LOG"
+
+          for proj in tests/*/*.csproj; do
+            echo "=== Testing $proj ==="
+            dotnet test -c Release --no-build \
+              --collect:"XPlat Code Coverage" \
+              --results-directory "$RESULTS_DIR" \
+              --logger "console;verbosity=normal" \
+              "$proj" \
+              -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura \
+              2>&1 | tee -a "$LOG"
+            EXIT=$?
+            if [ "$EXIT" -ne 0 ]; then
+              FAILURES=$((FAILURES + 1))
+              echo "::error::Tests failed for $proj (exit $EXIT)"
+            fi
+          done
+
+          if grep -E 'Skipped:\s*[1-9][0-9]*' "$LOG"; then
+            echo "::error::One or more test runs reported skipped tests."
+            FAILURES=$((FAILURES + 1))
+          fi
+
+          if [ "$FAILURES" -ne 0 ]; then
+            exit 1
+          fi
 
       - name: Pack
         run: |
