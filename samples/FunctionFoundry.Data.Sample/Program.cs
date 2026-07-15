@@ -1,4 +1,3 @@
-using System.Text;
 using FunctionFoundry.Data;
 
 string tempDir = Path.Combine(Path.GetTempPath(), "ff-data-sample-" + Guid.NewGuid().ToString("N"));
