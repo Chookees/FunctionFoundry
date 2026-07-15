@@ -9,6 +9,14 @@
     <None Include="PACKAGE.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(IsPackable)' == 'true' and Exists('$(MSBuildThisFileDirectory)NOTICE')">
+    <None Include="$(MSBuildThisFileDirectory)NOTICE" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(IsPackable)' == 'true' and Exists('$(MSBuildThisFileDirectory)LICENSE')">
+    <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
   <Target Name="ValidateNoForbiddenPackageNames" BeforeTargets="Build"
           Condition="'$(IsPackable)' == 'true'">
     <Error

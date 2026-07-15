@@ -6,7 +6,7 @@
 [![Coverage](https://img.shields.io/badge/coverage-84.8%25%20line-yellowgreen)](docs/coverage-summary.md)
 [![Branch Coverage](https://img.shields.io/badge/branch%20coverage-72.3%25-yellowgreen)](docs/coverage-summary.md)
 [![Skipped](https://img.shields.io/badge/skipped-0-brightgreen)](docs/coverage-summary.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Packages](https://img.shields.io/badge/packages-10%20independent-blue)](#packages)
 
 FunctionFoundry is a modular collection of independent, production-grade .NET libraries that provide specialized capabilities not supplied by the BCL or common Microsoft packages.
@@ -65,4 +65,6 @@ Package artifacts are written to `artifacts/packages/`. Full coverage breakdown:
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+Licensed under the **Apache License, Version 2.0** — free to use commercially and non-commercially, with **attribution required**.
+
+When you use FunctionFoundry, retain the copyright notices and credit **FunctionFoundry** as described in [LICENSE](LICENSE) and [NOTICE](NOTICE).

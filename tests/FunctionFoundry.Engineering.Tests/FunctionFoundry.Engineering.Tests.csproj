@@ -15,6 +15,10 @@
   <ItemGroup>
     <None Include="..\..\global.json" Link="global.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\Directory.Build.props" Link="Directory.Build.props" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\Directory.Build.targets" Link="Directory.Build.targets" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\Directory.Packages.props" Link="Directory.Packages.props" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\LICENSE" Link="LICENSE" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\NOTICE" Link="NOTICE" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

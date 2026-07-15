@@ -36,6 +36,19 @@ public sealed class SdkPinningTests
         Assert.Contains(".Helpers", content, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void Repository_uses_Apache_2_0_with_attribution_notice()
+    {
+        string props = File.ReadAllText(FindRepoFile("Directory.Build.props"));
+        Assert.Contains("<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>", props, StringComparison.Ordinal);
+        string license = File.ReadAllText(FindRepoFile("LICENSE"));
+        Assert.Contains("Apache License", license, StringComparison.Ordinal);
+        Assert.Contains("Version 2.0", license, StringComparison.Ordinal);
+        string notice = File.ReadAllText(FindRepoFile("NOTICE"));
+        Assert.Contains("FunctionFoundry", notice, StringComparison.Ordinal);
+        Assert.Contains("Attribution", notice, StringComparison.OrdinalIgnoreCase);
+    }
+
     private static string FindRepoFile(string relativePath)
     {
         string? dir = AppContext.BaseDirectory;
