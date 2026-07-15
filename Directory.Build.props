@@ -15,8 +15,8 @@
     <Company>FunctionFoundry</Company>
     <Copyright>Copyright (c) FunctionFoundry Contributors</Copyright>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/Chookees/UP_town_Funcs</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Chookees/UP_town_Funcs</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Chookees/FunctionFoundry</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Chookees/FunctionFoundry</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
