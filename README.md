@@ -6,18 +6,20 @@ Each library ships as its own DLL and NuGet package. There is no mandatory aggre
 
 ## Packages
 
-| Package | Purpose |
-|---|---|
-| `FunctionFoundry.Security` | Envelope encryption, deterministic pseudonymization, threshold secret sharing, key-rotation planning |
-| `FunctionFoundry.Storage` | Transactional file-set writes, content-addressed storage, content-defined chunking, Merkle file-tree diffs |
-| `FunctionFoundry.Integrity` | Canonical JSON, hash manifests, Merkle proofs, tamper-evident hash chains |
-| `FunctionFoundry.Observability` | Sensitive-data redaction, event fingerprinting, adaptive sampling, burst coalescing |
-| `FunctionFoundry.Data` | External merge sort, structural tree diff, three-way merge, temporal interval join |
-| `FunctionFoundry.Text` | Unicode spoof detection, secret scanning, near-duplicate indexing, delimited-text dialect inference |
-| `FunctionFoundry.Resilience` | Adaptive concurrency, hedged execution, execution budgets, checkpointed batch execution |
-| `FunctionFoundry.Networking` | Resumable parallel downloads, mirror selection, transfer planning, streaming integrity verification |
-| `FunctionFoundry.Distributed` | Weighted rendezvous hashing, version clocks, phi-accrual failure detection, quorum aggregation |
-| `FunctionFoundry.Scheduling` | Interval-set algebra, recurring availability, business calendars, critical-path scheduling |
+Each product has a dedicated README under `src/<Package>/README.md` describing exactly what it does.
+
+| Package | Purpose | README |
+|---|---|---|
+| `FunctionFoundry.Security` | Envelope encryption, deterministic pseudonymization, threshold secret sharing, key-rotation planning | [README](src/FunctionFoundry.Security/README.md) |
+| `FunctionFoundry.Storage` | Transactional file-set writes, content-addressed storage, content-defined chunking, Merkle file-tree diffs | [README](src/FunctionFoundry.Storage/README.md) |
+| `FunctionFoundry.Integrity` | Canonical JSON, hash manifests, Merkle proofs, tamper-evident hash chains | [README](src/FunctionFoundry.Integrity/README.md) |
+| `FunctionFoundry.Observability` | Sensitive-data redaction, event fingerprinting, adaptive sampling, burst coalescing | [README](src/FunctionFoundry.Observability/README.md) |
+| `FunctionFoundry.Data` | External merge sort, structural tree diff, three-way merge, temporal interval join | [README](src/FunctionFoundry.Data/README.md) |
+| `FunctionFoundry.Text` | Unicode spoof detection, secret scanning, near-duplicate indexing, delimited-text dialect inference | [README](src/FunctionFoundry.Text/README.md) |
+| `FunctionFoundry.Resilience` | Adaptive concurrency, hedged execution, execution budgets, checkpointed batch execution | [README](src/FunctionFoundry.Resilience/README.md) |
+| `FunctionFoundry.Networking` | Resumable parallel downloads, mirror selection, transfer planning, streaming integrity verification | [README](src/FunctionFoundry.Networking/README.md) |
+| `FunctionFoundry.Distributed` | Weighted rendezvous hashing, version clocks, phi-accrual failure detection, quorum aggregation | [README](src/FunctionFoundry.Distributed/README.md) |
+| `FunctionFoundry.Scheduling` | Interval-set algebra, recurring availability, business calendars, critical-path scheduling | [README](src/FunctionFoundry.Scheduling/README.md) |
 
 ## Requirements
 
