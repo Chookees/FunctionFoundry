@@ -66,4 +66,12 @@ public sealed class MerkleTreeTests
         MerkleTree tree = MerkleTree.Build(["x"u8.ToArray()], new MerkleTreeOptions(ManifestHashAlgorithm.Sha384));
         Assert.Equal(48, tree.Root.Length);
     }
+
+    [Fact]
+    public void CreateProof_throws_for_out_of_range_index()
+    {
+        MerkleTree tree = MerkleTree.Build(["leaf"u8.ToArray()]);
+        Assert.Throws<ArgumentOutOfRangeException>(() => tree.CreateProof(1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => tree.CreateProof(-1));
+    }
 }

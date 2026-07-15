@@ -72,6 +72,20 @@ public sealed class BurstCoalescerTests
         Assert.Equal(100, summary.TotalCount);
     }
 
+    [Fact]
+    public void Options_validate_rejects_non_positive_window()
+    {
+        var options = new BurstCoalescerOptions { Window = TimeSpan.Zero };
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.Validate());
+    }
+
+    [Fact]
+    public void Record_throws_for_blank_fingerprint()
+    {
+        var coalescer = new BurstCoalescer();
+        Assert.Throws<ArgumentException>(() => coalescer.Record("  ", "payload"));
+    }
+
     private sealed class MutableClock(DateTimeOffset start)
     {
         private DateTimeOffset _now = start;

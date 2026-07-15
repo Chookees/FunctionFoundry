@@ -79,4 +79,11 @@ public sealed class AdaptiveSamplerTests
         Assert.Equal(128, stats.TotalDecisions);
         Assert.Equal(stats.SampledCount + stats.DroppedCount, stats.TotalDecisions);
     }
+
+    [Fact]
+    public void Options_validate_rejects_invalid_sample_rates()
+    {
+        var options = new AdaptiveSamplerOptions { BaseSampleRate = 0.2, MinSampleRate = 0.5 };
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.Validate());
+    }
 }

@@ -144,6 +144,14 @@ public sealed class TransactionalFileSetWriterTests
         Assert.True(string.CompareOrdinal(reports[0].TransactionId, reports[1].TransactionId) < 0);
     }
 
+    [Fact]
+    public async Task RecoverAll_returns_empty_when_staging_missing()
+    {
+        string root = CreateTempDirectory();
+        IReadOnlyList<RecoveryReport> reports = await TransactionalFileSetRecovery.RecoverAllAsync(root);
+        Assert.Empty(reports);
+    }
+
     private static string CreateTempDirectory()
     {
         string path = Path.Combine(Path.GetTempPath(), "ff-storage-" + Guid.NewGuid().ToString("N"));

@@ -31,4 +31,21 @@ public sealed class TransferPlanTests
         Assert.Single(repair);
         Assert.Equal(1, repair[0].Index);
     }
+
+    [Fact]
+    public void Create_rejects_invalid_arguments()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => TransferPlan.Create(-1, 16));
+        Assert.Throws<ArgumentOutOfRangeException>(() => TransferPlan.Create(100, 0));
+    }
+
+    [Fact]
+    public void Create_zero_size_has_empty_chunks_with_full_coverage()
+    {
+        TransferPlan plan = TransferPlan.Create(0, 16);
+        Assert.Empty(plan.Chunks);
+        TransferPlanValidationResult validation = plan.Validate();
+        Assert.True(validation.HasFullCoverage);
+        Assert.False(validation.HasOverlaps);
+    }
 }

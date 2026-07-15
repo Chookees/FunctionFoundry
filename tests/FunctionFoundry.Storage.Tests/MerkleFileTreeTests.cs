@@ -128,6 +128,16 @@ public sealed class MerkleFileTreeTests
         Assert.Single(diff.Modified);
     }
 
+    [Fact]
+    public async Task Snapshot_empty_directory_has_no_entries()
+    {
+        string root = CreateTempDirectory();
+        var tree = new MerkleFileTree();
+        MerkleFileTreeSnapshot snapshot = await tree.SnapshotAsync(root);
+        Assert.Empty(snapshot.Entries);
+        Assert.Equal(64, snapshot.RootHashHex.Length);
+    }
+
     private static string CreateSampleTree()
     {
         string root = CreateTempDirectory();

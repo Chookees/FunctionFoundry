@@ -75,4 +75,18 @@ public sealed class EventFingerprinterTests
         Assert.True(fingerprint.Components.Count >= 3);
         Assert.All(fingerprint.Components, c => Assert.False(string.IsNullOrWhiteSpace(c.NormalizedValue)));
     }
+
+    [Fact]
+    public void Fingerprint_throws_for_null_input()
+    {
+        var fingerprinter = new EventFingerprinter();
+        Assert.Throws<ArgumentNullException>(() => fingerprinter.Fingerprint(null!));
+    }
+
+    [Fact]
+    public void Options_validate_rejects_negative_inner_exception_depth()
+    {
+        var options = new EventFingerprinterOptions { MaxInnerExceptionDepth = -1 };
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.Validate());
+    }
 }

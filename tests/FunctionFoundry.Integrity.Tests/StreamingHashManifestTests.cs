@@ -104,4 +104,24 @@ public sealed class StreamingHashManifestTests
         Assert.Equal(expected, hashHex);
         Assert.Equal(data.Length, size);
     }
+
+    [Fact]
+    public void Verify_reports_size_mismatch_when_size_metadata_present()
+    {
+        var builder = StreamingHashManifest.CreateBuilder();
+        builder.AddEntry("sized.txt", new MemoryStream("abc"u8.ToArray()), includeSize: true);
+        StreamingHashManifestDocument manifest = StreamingHashManifest.Parse(builder.Build());
+
+        var entries = new Dictionary<string, Stream>
+        {
+            ["sized.txt"] = new MemoryStream("abcd"u8.ToArray()),
+        };
+
+        ManifestVerificationResult result = StreamingHashManifest.Verify(manifest, entries);
+        Assert.False(result.IsValid);
+        Assert.Single(result.SizeMismatches);
+        Assert.Equal("sized.txt", result.SizeMismatches[0].RelativePath);
+        Assert.Equal(3, result.SizeMismatches[0].ExpectedSizeBytes);
+        Assert.Equal(4, result.SizeMismatches[0].ActualSizeBytes);
+    }
 }
