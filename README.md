@@ -12,7 +12,7 @@
 FunctionFoundry is a modular collection of independent, production-grade .NET libraries that provide specialized capabilities not supplied by the BCL or common Microsoft packages.
 
 Each library ships as its own DLL and NuGet package. There is no mandatory aggregate package and no shared runtime "commons" dependency between core packages.
-
+Nuget Packages: https://www.nuget.org/packages?q=functionfoundry
 ## Packages
 
 Each product has a dedicated README under `src/<Package>/README.md` describing exactly what it does.
