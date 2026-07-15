@@ -1,6 +1,6 @@
 # FunctionFoundry
 
-[![CI](https://github.com/Chookees/UP_town_Funcs/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Chookees/UP_town_Funcs/actions/workflows/ci.yml)
+[![CI](https://github.com/Chookees/FunctionFoundry/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Chookees/FunctionFoundry/actions/workflows/ci.yml)
 [![.NET](https://img.shields.io/badge/.NET-10.0.301-512BD4?logo=dotnet&logoColor=white)](global.json)
 [![Tests](https://img.shields.io/badge/tests-224%20passed-brightgreen)](docs/coverage-summary.md)
 [![Coverage](https://img.shields.io/badge/coverage-84.8%25%20line-yellowgreen)](docs/coverage-summary.md)

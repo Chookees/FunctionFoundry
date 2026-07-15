@@ -29,4 +29,4 @@ Measured with Coverlet Cobertura on a Release `net10.0` build (SDK 10.0.301).
 
 ## Pipeline note
 
-Latest verified green CI for the expanded test branch: https://github.com/Chookees/UP_town_Funcs/actions/runs/29378869693
+Latest verified green CI for the expanded test branch: https://github.com/Chookees/FunctionFoundry/actions/runs/29378869693
