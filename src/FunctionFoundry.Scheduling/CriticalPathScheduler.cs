@@ -139,10 +139,14 @@ public sealed class CriticalPathScheduler
             }
         }
 
-        IReadOnlyList<string>? cycle = DetectCycle(tasks);
-        if (cycle is not null)
+        // Cycle detection requires a closed graph; skip it when unknown dependencies already invalidate structure.
+        if (errors.Count == 0)
         {
-            errors.Add(new ScheduleValidationError("Dependency cycle detected.", cycle));
+            IReadOnlyList<string>? cycle = DetectCycle(tasks);
+            if (cycle is not null)
+            {
+                errors.Add(new ScheduleValidationError("Dependency cycle detected.", cycle));
+            }
         }
 
         return errors;
