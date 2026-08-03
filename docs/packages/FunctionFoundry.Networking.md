@@ -14,6 +14,6 @@ Capability is detected with a lightweight `Range: bytes=0-0` probe. When ranges 
 
 Download and transfer checkpoints are persisted through abstractions so hosts can use files, object storage, or databases. Incompatible checkpoints (changed ETag, size, or plan version) are rejected explicitly.
 
-### Integrity
+### Adaptive chunks and repair
 
-`StreamingIntegrityVerifier` maintains per-chunk digests and a rolling full-object hash without buffering entire files in memory.
+`ResumableParallelDownloader` smooths chunk size within configured min/max bounds from observed per-chunk throughput. Length-mismatched range responses are reassigned via `TransferPlan.GetRepairAssignments`. When the final object digest fails, optional repair passes re-download the plan's chunks (`MaxRepairPasses`).

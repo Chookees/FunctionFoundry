@@ -1,0 +1,72 @@
+name: Publish NuGet
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: SemVer package version to publish (e.g. 1.0.0)
+        required: true
+        default: "1.0.0"
+  release:
+    types: [published]
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  CI: true
+  FF_RELEASE_PACK: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: ver
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            TAG="${{ github.event.release.tag_name }}"
+            VERSION="${TAG#v}"
+          else
+            VERSION="${{ inputs.version }}"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Publishing version $VERSION"
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore / build / pack (no -local suffix)
+        run: |
+          dotnet restore --locked-mode
+          dotnet build -c Release --no-restore -p:Version=${{ steps.ver.outputs.version }} -p:VersionSuffix=
+          mkdir -p artifacts/packages
+          dotnet pack -c Release --no-build -o artifacts/packages -p:Version=${{ steps.ver.outputs.version }} -p:VersionSuffix=
+
+      - name: Push to NuGet.org
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        shell: bash
+        run: |
+          if [ -z "$NUGET_API_KEY" ]; then
+            echo "::error::NUGET_API_KEY secret is not configured."
+            exit 1
+          fi
+          shopt -s nullglob
+          packages=(artifacts/packages/FunctionFoundry.*.${{ steps.ver.outputs.version }}.nupkg)
+          if [ ${#packages[@]} -eq 0 ]; then
+            echo "::error::No nupkg files found for version ${{ steps.ver.outputs.version }}."
+            exit 1
+          fi
+          for pkg in "${packages[@]}"; do
+            echo "Pushing $pkg"
+            dotnet nuget push "$pkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+          done

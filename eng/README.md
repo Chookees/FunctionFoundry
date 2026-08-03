@@ -24,7 +24,8 @@ Set `IsTrimmable` / `IsAotCompatible` only after smoke tests pass.
 * Framework: xUnit
 * Deterministic seeds for randomized tests
 * No mocking frameworks unless interaction-based mocking is required
-* Coverage target ≥85% line across production code
+* Target: ≥85% line coverage across production `src/` (enforced in CI)
+* Prefer ≥90% branch coverage on critical algorithms where practical; document justified exclusions
 
 ## Benchmark conventions
 

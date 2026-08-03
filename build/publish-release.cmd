@@ -10,6 +10,7 @@ set "STAGE_PACKAGES=%RELEASE_DIR%\packages"
 
 set "DOTNET_NOLOGO=1"
 set "DOTNET_CLI_TELEMETRY_OPTOUT=1"
+if not defined FF_RELEASE_PACK set "FF_RELEASE_PACK=true"
 
 echo ==> Repository root: %ROOT%
 echo ==> Cleaning %RELEASE_DIR%
@@ -18,17 +19,17 @@ mkdir "%STAGE_BIN%"
 mkdir "%STAGE_PACKAGES%"
 
 echo ==> Restoring
-dotnet restore FunctionFoundry.slnx
+dotnet restore --locked-mode FunctionFoundry.slnx
 if errorlevel 1 exit /b 1
 
 echo ==> Building Release
-dotnet build FunctionFoundry.slnx -c Release --no-restore
+dotnet build FunctionFoundry.slnx -c Release --no-restore -p:VersionSuffix=
 if errorlevel 1 exit /b 1
 
 echo ==> Packing NuGet packages
 if exist "%ROOT%\artifacts\packages" rmdir /s /q "%ROOT%\artifacts\packages"
 mkdir "%ROOT%\artifacts\packages"
-dotnet pack FunctionFoundry.slnx -c Release --no-build -o "%ROOT%\artifacts\packages"
+dotnet pack FunctionFoundry.slnx -c Release --no-build -o "%ROOT%\artifacts\packages" -p:VersionSuffix=
 if errorlevel 1 exit /b 1
 
 echo ==> Collecting library binaries

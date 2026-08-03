@@ -2,11 +2,15 @@
 
 ## Supported versions
 
-Security updates are provided for the latest released major version of FunctionFoundry packages (currently targeting the v1.0 line once released).
+Security updates are provided for the latest released major version of FunctionFoundry packages (currently the v1.0 line).
 
 ## Reporting a vulnerability
 
-Please report security vulnerabilities privately. Do not open a public GitHub issue for undisclosed defects.
+Please report security vulnerabilities **privately**. Do not open a public GitHub issue for undisclosed defects.
+
+**Preferred channel:** use [GitHub Security Advisories → Report a vulnerability](https://github.com/Chookees/FunctionFoundry/security/advisories/new) on this repository.
+
+If you cannot use GitHub Security Advisories, email the maintainers via the contact listed on the [GitHub organization / repository security contacts](https://github.com/Chookees/FunctionFoundry#security) once configured, or open a private maintainer contact request without including exploit details in a public issue.
 
 Include:
 
