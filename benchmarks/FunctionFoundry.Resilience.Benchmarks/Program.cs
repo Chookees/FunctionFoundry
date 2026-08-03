@@ -10,11 +10,12 @@ internal static class Program
 }
 
 [MemoryDiagnoser]
-public sealed class ResilienceBenchmarks : IDisposable
+public class ResilienceBenchmarks : IDisposable
 {
     private AdaptiveConcurrencyController _controller = null!;
     private HedgedExecution _hedged = null!;
     private ExecutionBudget _budget = null!;
+    private bool _disposed;
 
     [GlobalSetup]
     public void Setup()
@@ -48,8 +49,23 @@ public sealed class ResilienceBenchmarks : IDisposable
 
     public void Dispose()
     {
-        _controller.Dispose();
-        _budget.Dispose();
+        Dispose(disposing: true);
         GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (disposing)
+        {
+            _controller.Dispose();
+            _budget.Dispose();
+        }
+
+        _disposed = true;
     }
 }
