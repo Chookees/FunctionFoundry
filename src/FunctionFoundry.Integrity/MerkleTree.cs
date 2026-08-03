@@ -17,6 +17,14 @@ public sealed record MerkleTreeOptions(ManifestHashAlgorithm HashAlgorithm = Man
 public sealed record MerkleProof(int LeafIndex, IReadOnlyList<byte[]> Siblings, int LeafCount);
 
 /// <summary>
+/// Compact multi-leaf inclusion proof for a <see cref="MerkleTree"/>.
+/// </summary>
+/// <param name="LeafIndices">Sorted unique leaf indices covered by the proof.</param>
+/// <param name="Nodes">Helper node hashes required to reconstruct the root.</param>
+/// <param name="LeafCount">Total leaf count in the original tree.</param>
+public sealed record MerkleMultiproof(IReadOnlyList<int> LeafIndices, IReadOnlyList<byte[]> Nodes, int LeafCount);
+
+/// <summary>
 /// Result of Merkle proof verification.
 /// </summary>
 /// <param name="IsValid">Whether the proof matches the supplied root for the leaf.</param>
@@ -110,6 +118,122 @@ public sealed class MerkleTree
         }
 
         return new MerkleProof(leafIndex, siblings, _level0.Length);
+    }
+
+    /// <summary>
+    /// Creates a multiproof covering the supplied leaf indices.
+    /// </summary>
+    /// <param name="leafIndices">Leaf indices to prove. Duplicates are ignored.</param>
+    /// <returns>Multiproof with deterministic helper node ordering.</returns>
+    public MerkleMultiproof CreateMultiproof(IEnumerable<int> leafIndices)
+    {
+        ArgumentNullException.ThrowIfNull(leafIndices);
+        int[] indices = leafIndices.Distinct().OrderBy(static i => i).ToArray();
+        if (indices.Length == 0)
+        {
+            throw new ArgumentException("At least one leaf index is required.", nameof(leafIndices));
+        }
+
+        foreach (int index in indices)
+        {
+            if (index < 0 || index >= _level0.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(leafIndices), $"Leaf index {index} is out of range.");
+            }
+        }
+
+        // Correctness-first multiproof: concatenate single-proof siblings in index order.
+        // Shared nodes may repeat; verification reconstructs each leaf path independently then checks root equality.
+        var nodes = new List<byte[]>();
+        foreach (int index in indices)
+        {
+            MerkleProof single = CreateProof(index);
+            foreach (byte[] sibling in single.Siblings)
+            {
+                nodes.Add((byte[])sibling.Clone());
+            }
+        }
+
+        return new MerkleMultiproof(indices, nodes, _level0.Length);
+    }
+
+    /// <summary>
+    /// Verifies a multiproof for multiple leaf payloads against an expected root.
+    /// </summary>
+    /// <param name="expectedRoot">Expected Merkle root digest.</param>
+    /// <param name="leaves">Leaf payloads keyed by index; must match <see cref="MerkleMultiproof.LeafIndices"/>.</param>
+    /// <param name="proof">Multiproof.</param>
+    /// <param name="options">Optional tree options.</param>
+    public static MerkleProofVerificationResult VerifyMultiproof(
+        ReadOnlySpan<byte> expectedRoot,
+        IReadOnlyList<(int LeafIndex, byte[] Leaf)> leaves,
+        MerkleMultiproof proof,
+        MerkleTreeOptions? options = null)
+    {
+        ArgumentNullException.ThrowIfNull(leaves);
+        ArgumentNullException.ThrowIfNull(proof);
+        if (leaves.Count != proof.LeafIndices.Count)
+        {
+            throw new ArgumentException("Leaf payload count must match multiproof leaf indices.", nameof(leaves));
+        }
+
+        int nodeOffset = 0;
+        byte[]? firstRoot = null;
+        for (int i = 0; i < proof.LeafIndices.Count; i++)
+        {
+            int expectedIndex = proof.LeafIndices[i];
+            (int leafIndex, byte[] leaf) = leaves[i];
+            if (leafIndex != expectedIndex)
+            {
+                throw new ArgumentException($"Leaf index mismatch at position {i}.", nameof(leaves));
+            }
+
+            ArgumentNullException.ThrowIfNull(leaf);
+            int remainingLevels = CountProofLevels(proof.LeafCount);
+            if (nodeOffset + remainingLevels > proof.Nodes.Count)
+            {
+                throw new ArgumentException("Multiproof does not contain enough helper nodes.", nameof(proof));
+            }
+
+            byte[][] siblings = new byte[remainingLevels][];
+            for (int level = 0; level < remainingLevels; level++)
+            {
+                siblings[level] = proof.Nodes[nodeOffset++];
+            }
+
+            MerkleProof single = new(leafIndex, siblings, proof.LeafCount);
+            MerkleProofVerificationResult result = VerifyProof(expectedRoot, leaf, single, options);
+            if (!result.IsValid)
+            {
+                return result;
+            }
+
+            firstRoot ??= result.ComputedRoot.ToArray();
+            if (!firstRoot.AsSpan().SequenceEqual(result.ComputedRoot.Span))
+            {
+                return new MerkleProofVerificationResult(false, result.ComputedRoot);
+            }
+        }
+
+        if (nodeOffset != proof.Nodes.Count)
+        {
+            throw new ArgumentException("Multiproof contains unused helper nodes.", nameof(proof));
+        }
+
+        return new MerkleProofVerificationResult(true, firstRoot ?? expectedRoot.ToArray());
+    }
+
+    private static int CountProofLevels(int leafCount)
+    {
+        int levels = 0;
+        int size = leafCount;
+        while (size > 1)
+        {
+            levels++;
+            size = (size + 1) / 2;
+        }
+
+        return levels;
     }
 
     /// <summary>

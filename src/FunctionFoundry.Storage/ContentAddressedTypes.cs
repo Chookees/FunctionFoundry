@@ -43,3 +43,16 @@ public sealed record ContentAddressedGcPlan(
         return builder.ToString();
     }
 }
+
+/// <summary>
+/// Outcome of executing a content-addressed garbage-collection plan.
+/// </summary>
+/// <param name="DeletedObjects">Number of objects successfully deleted.</param>
+/// <param name="ReclaimedBytes">Sum of deleted object sizes from the plan metadata.</param>
+/// <param name="DeletedHashes">Deleted content hashes in ordinal order.</param>
+/// <param name="FailedHashes">Hashes that could not be deleted due to I/O or authorization errors.</param>
+public sealed record ContentAddressedGcResult(
+    int DeletedObjects,
+    long ReclaimedBytes,
+    IReadOnlyList<string> DeletedHashes,
+    IReadOnlyList<string> FailedHashes);

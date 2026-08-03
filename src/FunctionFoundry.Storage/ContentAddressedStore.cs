@@ -7,8 +7,8 @@ namespace FunctionFoundry.Storage;
 /// </summary>
 /// <remarks>
 /// <para>Layout: <c>{root}/{objects}/ab/cdef...</c> using the first two hash hex digits as a shard directory.</para>
-/// <para>Guarantees: integrity verification on read, temp-and-rename writes, deduplication, non-destructive GC planning.</para>
-/// <para>Non-goals: automatic deletion, encryption, remote replication.</para>
+/// <para>Guarantees: integrity verification on read, temp-and-rename writes, deduplication, non-destructive GC planning, and optional GC execution.</para>
+/// <para>Non-goals: encryption, remote replication.</para>
 /// </remarks>
 public sealed class ContentAddressedStore
 {
@@ -133,6 +133,53 @@ public sealed class ContentAddressedStore
 
         candidates.Sort(static (left, right) => string.Compare(left.ContentHashHex, right.ContentHashHex, StringComparison.Ordinal));
         return Task.FromResult(new ContentAddressedGcPlan(candidates, total));
+    }
+
+    /// <summary>
+    /// Deletes orphan objects identified by <paramref name="plan"/>. Missing files are ignored.
+    /// </summary>
+    /// <param name="plan">Plan previously produced by <see cref="PlanGarbageCollectionAsync"/>.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Deletion outcome including reclaimed bytes and any failures.</returns>
+    public Task<ContentAddressedGcResult> ExecuteGarbageCollectionAsync(
+        ContentAddressedGcPlan plan,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(plan);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var deleted = new List<string>();
+        var failed = new List<string>();
+        long reclaimed = 0;
+
+        foreach (ContentAddressedOrphanCandidate candidate in plan.Candidates)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            string objectPath = GetObjectPath(candidate.ContentHashHex);
+            try
+            {
+                if (!File.Exists(objectPath))
+                {
+                    continue;
+                }
+
+                File.Delete(objectPath);
+                deleted.Add(candidate.ContentHashHex);
+                reclaimed += candidate.SizeBytes;
+            }
+            catch (IOException)
+            {
+                failed.Add(candidate.ContentHashHex);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                failed.Add(candidate.ContentHashHex);
+            }
+        }
+
+        deleted.Sort(StringComparer.Ordinal);
+        failed.Sort(StringComparer.Ordinal);
+        return Task.FromResult(new ContentAddressedGcResult(deleted.Count, reclaimed, deleted, failed));
     }
 
     private async Task<(string HashHex, long Size, bool Deduplicated)> IngestStreamAsync(Stream content, CancellationToken cancellationToken)

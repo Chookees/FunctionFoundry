@@ -7,25 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-
-* Pin .NET SDK **10.0.302** (maintenance upgrade from 10.0.301; roll-forward still disabled).
-* Local packs keep the `-local` version suffix; CI and `FF_RELEASE_PACK=true` produce clean SemVer packages suitable for NuGet.org.
-* CI now runs on Ubuntu and Windows, builds all samples, restores with lock files, and fails when aggregated line coverage is below 85%.
-* `FunctionFoundry.Networking` downloader now adapts chunk size within min/max from observed throughput and performs corrupt-chunk / digest repair passes.
-* Security reporting documents GitHub Security Advisories as the private channel.
+## [1.1.0] - 2026-08-03
 
 ### Added
 
-* `.github/workflows/publish-nuget.yml` for clean version publishes (requires `NUGET_API_KEY`).
-* Dependabot for GitHub Actions and NuGet.
-* `CODE_OF_CONDUCT.md`.
-* Package lock files (`packages.lock.json`) for reproducible restores.
+* `FunctionFoundry.Security.HkdfDataKeyDeriver` — HKDF-SHA256 data-key derivation from a master key.
+* `FunctionFoundry.Storage.ContentAddressedStore.ExecuteGarbageCollectionAsync` — apply orphan GC plans.
+* `FunctionFoundry.Integrity.MerkleTree` multiproof create/verify APIs.
+* `FunctionFoundry.Distributed.HybridLogicalClock` — hybrid logical timestamps for causal ordering.
+* `FunctionFoundry.Text.HomoglyphNormalizer` — confusable folding to NFC skeletons.
+* `FunctionFoundry.Observability.CardinalityLimiter` — bounded high-cardinality key admission.
+* `FunctionFoundry.Resilience.RetryBudget` — token-budget gate for retry amplification control.
+* `FunctionFoundry.Scheduling.BusinessCalendar.MeasureWorkingDuration` — measure working time between instants.
+* `FunctionFoundry.Data.KWaySortedMerge<T>` — heap-based merge of already-sorted sequences.
+* `FunctionFoundry.Networking.ContentRangeHeader` — parse/format HTTP Content-Range byte headers.
 
-### Fixed
+### Changed
 
-* Documentation drift (test counts, tag naming, release/NuGet status) in `STATE.md` and `docs/FINAL_REPORT.md`.
-* Changelog now records the Apache 2.0 relicense under 1.0.0 (was incorrectly left only under Unreleased).
+* Package version prefix bumped to **1.1.0**.
+* Pin .NET SDK **10.0.302** (maintenance upgrade from 10.0.301; roll-forward still disabled).
+* Local packs keep the `-local` version suffix; CI and `FF_RELEASE_PACK=true` produce clean SemVer packages.
+* CI runs on Ubuntu and Windows, builds samples, restores with lock files, and fails below 85% line coverage.
+* `FunctionFoundry.Networking` downloader adapts chunk size and performs corrupt-chunk / digest repair.
+* Security reporting documents GitHub Security Advisories as the private channel.
 
 ## [1.0.0] - 2026-07-14
 
@@ -51,4 +55,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Feature 1 packages were hardened as the conceptual v0.5.0 baseline; Feature 2 completion is released as v1.0.0.
 * No mandatory aggregate package. Core packages have zero third-party runtime dependencies.
-* An accidental NuGet publish of `1.0.0-local` should be replaced by a clean `1.0.0` using the Publish NuGet workflow.
+* An accidental NuGet publish of `1.0.0-local` should be replaced by a clean `1.0.0` / `1.1.0` using the Publish NuGet workflow.

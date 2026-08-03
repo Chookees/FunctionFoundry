@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/Chookees/FunctionFoundry/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Chookees/FunctionFoundry/actions/workflows/ci.yml)
 [![.NET](https://img.shields.io/badge/.NET-10.0.302-512BD4?logo=dotnet&logoColor=white)](global.json)
-[![Tests](https://img.shields.io/badge/tests-242%20passed-brightgreen)](docs/coverage-summary.md)
+[![Tests](https://img.shields.io/badge/tests-271%20passed-brightgreen)](docs/coverage-summary.md)
 [![Coverage](https://img.shields.io/badge/coverage-85.8%25%20line-brightgreen)](docs/coverage-summary.md)
 [![Branch Coverage](https://img.shields.io/badge/branch%20coverage-remeasure-lightgrey)](docs/coverage-summary.md)
 [![Skipped](https://img.shields.io/badge/skipped-0-brightgreen)](docs/coverage-summary.md)
@@ -19,15 +19,15 @@ Each product has a dedicated README under `src/<Package>/README.md` describing e
 
 | Package | Purpose | README |
 |---|---|---|
-| `FunctionFoundry.Security` | Envelope encryption, deterministic pseudonymization, threshold secret sharing, key-rotation planning | [README](src/FunctionFoundry.Security/README.md) |
-| `FunctionFoundry.Storage` | Transactional file-set writes, content-addressed storage, content-defined chunking, Merkle file-tree diffs | [README](src/FunctionFoundry.Storage/README.md) |
-| `FunctionFoundry.Integrity` | Canonical JSON, hash manifests, Merkle proofs, tamper-evident hash chains | [README](src/FunctionFoundry.Integrity/README.md) |
-| `FunctionFoundry.Observability` | Sensitive-data redaction, event fingerprinting, adaptive sampling, burst coalescing | [README](src/FunctionFoundry.Observability/README.md) |
-| `FunctionFoundry.Data` | External merge sort, structural tree diff, three-way merge, temporal interval join | [README](src/FunctionFoundry.Data/README.md) |
-| `FunctionFoundry.Text` | Unicode spoof detection, secret scanning, near-duplicate indexing, delimited-text dialect inference | [README](src/FunctionFoundry.Text/README.md) |
-| `FunctionFoundry.Resilience` | Adaptive concurrency, hedged execution, execution budgets, checkpointed batch execution | [README](src/FunctionFoundry.Resilience/README.md) |
-| `FunctionFoundry.Networking` | Resumable parallel downloads, mirror selection, transfer planning, streaming integrity verification | [README](src/FunctionFoundry.Networking/README.md) |
-| `FunctionFoundry.Distributed` | Weighted rendezvous hashing, version clocks, phi-accrual failure detection, quorum aggregation | [README](src/FunctionFoundry.Distributed/README.md) |
+| `FunctionFoundry.Security` | Envelope encryption, HKDF key derivation, deterministic pseudonymization, threshold secret sharing, key-rotation planning | [README](src/FunctionFoundry.Security/README.md) |
+| `FunctionFoundry.Storage` | Transactional file-set writes, content-addressed storage with GC, content-defined chunking, Merkle file-tree diffs | [README](src/FunctionFoundry.Storage/README.md) |
+| `FunctionFoundry.Integrity` | Canonical JSON, hash manifests, Merkle proofs/multiproofs, tamper-evident hash chains | [README](src/FunctionFoundry.Integrity/README.md) |
+| `FunctionFoundry.Observability` | Sensitive-data redaction, event fingerprinting, adaptive sampling, burst coalescing, cardinality limiting | [README](src/FunctionFoundry.Observability/README.md) |
+| `FunctionFoundry.Data` | External merge sort, k-way sorted merge, structural tree diff, three-way merge, temporal interval join | [README](src/FunctionFoundry.Data/README.md) |
+| `FunctionFoundry.Text` | Unicode spoof detection, homoglyph normalization, secret scanning, near-duplicate indexing, delimited-text dialect inference | [README](src/FunctionFoundry.Text/README.md) |
+| `FunctionFoundry.Resilience` | Adaptive concurrency, hedged execution, execution budgets, checkpointed batch execution, retry budgets | [README](src/FunctionFoundry.Resilience/README.md) |
+| `FunctionFoundry.Networking` | Resumable parallel downloads, Content-Range parsing, mirror selection, transfer planning, streaming integrity verification | [README](src/FunctionFoundry.Networking/README.md) |
+| `FunctionFoundry.Distributed` | Weighted rendezvous hashing, version clocks, hybrid logical clocks, phi-accrual failure detection, quorum aggregation | [README](src/FunctionFoundry.Distributed/README.md) |
 | `FunctionFoundry.Scheduling` | Interval-set algebra, recurring availability, business calendars, critical-path scheduling | [README](src/FunctionFoundry.Scheduling/README.md) |
 
 ## Requirements

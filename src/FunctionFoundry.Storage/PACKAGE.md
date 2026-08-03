@@ -5,7 +5,7 @@ Reliable local persistence primitives for atomic multi-file updates, content-add
 ## Capabilities
 
 * **Transactional file-set writer** — staging directory, write-ahead journal, atomic replace with explicit fallback, rollback, crash recovery, per-file SHA-256 checksums, deterministic recovery reports
-* **Content-addressed store** — streaming SHA-256 ingestion, deduplication, integrity verification, safe concurrent writers, orphan detection, non-destructive GC planning
+* **Content-addressed store** — streaming SHA-256 ingestion, deduplication, integrity verification, safe concurrent writers, orphan detection, GC planning and execution
 * **Content-defined chunker** — Rabin-style rolling-hash CDC with configurable min/target/max sizes and bounded memory
 * **Merkle file tree** — deterministic directory snapshots, add/remove/modify/moved detection, symlink policy, cycle protection, cross-platform path normalization
 

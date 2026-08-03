@@ -8,6 +8,7 @@ Resumable, integrity-aware HTTP transfer orchestration using caller-provided `Ht
 * **Mirror selector** — multi-signal scoring with failure decay, hysteresis, and exportable evidence
 * **Transfer plan** — chunk assignments independent of execution with overlap detection and corrupt-chunk repair assignment helpers
 * **Streaming integrity verifier** — bounded-memory incremental per-chunk and full-object digest verification
+* **Content-Range header** — parse and format HTTP byte Content-Range values for transfer planning
 
 ## Runtime dependencies
 
