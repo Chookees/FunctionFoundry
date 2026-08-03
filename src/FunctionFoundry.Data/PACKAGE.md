@@ -8,6 +8,7 @@ Bounded-memory and conflict-aware data processing primitives.
 * **Structural tree diff** — objects/arrays/scalars; add/remove/replace/move; identity keys for arrays; deterministic ops; complexity limits; human+machine readable
 * **Three-way merge** — base/local/remote; explicit conflicts; policies; no silent loss; path-level conflicts; deterministic
 * **Temporal interval join** — overlapping validity intervals; open/closed bounds; streaming/sorted mode; bounded memory; invalid interval handling
+* **K-way sorted merge** — heap merge of already-sorted sequences with optional adjacent deduplication
 
 ## Runtime dependencies
 

@@ -6,7 +6,7 @@ Deterministic integrity and verifiable-structure primitives over BCL cryptograph
 
 * **Canonical JSON** — documented deterministic JSON profile with sorted object keys, strict number rules, Unicode handling, duplicate-property rejection, and streaming canonicalization
 * **Streaming hash manifests** — multi-file/stream manifests with SHA-256 (SHA-384 optional), deterministic serialization, path-traversal protection, and detailed verification reports
-* **Merkle trees** — deterministic leaf encoding, inclusion proofs, odd-node duplication, and domain-separated leaf vs internal nodes
+* **Merkle trees** — deterministic leaf encoding, inclusion proofs, multiproofs, odd-node duplication, and domain-separated leaf vs internal nodes
 * **Hash chains** — append-only record chaining with sequence/timestamp policy, canonical encoding, and first-invalid-record verification reports
 
 ## Runtime dependencies

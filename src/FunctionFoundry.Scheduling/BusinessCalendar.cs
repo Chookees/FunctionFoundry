@@ -198,6 +198,65 @@ public sealed class BusinessCalendar
         return new BusinessCalendarResult(cursor, steps);
     }
 
+    /// <summary>
+    /// Measures working duration between <paramref name="start"/> and <paramref name="end"/>.
+    /// </summary>
+    /// <param name="start">Inclusive start UTC instant.</param>
+    /// <param name="end">Exclusive end UTC instant.</param>
+    /// <returns>Working time contained in the interval.</returns>
+    public TimeSpan MeasureWorkingDuration(DateTimeOffset start, DateTimeOffset end)
+    {
+        if (end < start)
+        {
+            throw new ArgumentOutOfRangeException(nameof(end), "End must not be before start.");
+        }
+
+        if (end == start)
+        {
+            return TimeSpan.Zero;
+        }
+
+        TimeSpan total = TimeSpan.Zero;
+        DateTimeOffset cursor = start;
+        List<BusinessCalendarStep> steps = new();
+        while (cursor < end)
+        {
+            cursor = AlignToNextWorkingInstant(cursor, steps);
+            if (cursor >= end)
+            {
+                break;
+            }
+
+            if (IsClosed(cursor))
+            {
+                DateTimeOffset afterClosure = SkipClosure(cursor, steps);
+                if (afterClosure <= cursor)
+                {
+                    break;
+                }
+
+                cursor = afterClosure;
+                continue;
+            }
+
+            DateTimeOffset segmentEnd = GetCurrentSegmentEnd(cursor);
+            DateTimeOffset consumeTo = segmentEnd < end ? segmentEnd : end;
+            if (consumeTo > cursor)
+            {
+                total += consumeTo - cursor;
+            }
+
+            cursor = consumeTo;
+            if (cursor == segmentEnd && cursor < end)
+            {
+                // Move just past segment end so alignment advances.
+                cursor = cursor.AddTicks(1);
+            }
+        }
+
+        return total;
+    }
+
     private DateTimeOffset AlignToNextWorkingInstant(DateTimeOffset instant, List<BusinessCalendarStep> steps)
     {
         DateTimeOffset cursor = instant;

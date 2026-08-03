@@ -22,7 +22,7 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionPrefix>1.1.0</VersionPrefix>
     <!-- Local packs get -local so accidental nuget.org pushes are distinguishable. Clear VersionSuffix (CI / publish scripts) for release packs. -->
     <VersionSuffix Condition="'$(VersionSuffix)' == '' and '$(CI)' != 'true' and '$(FF_RELEASE_PACK)' != 'true'">local</VersionSuffix>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
