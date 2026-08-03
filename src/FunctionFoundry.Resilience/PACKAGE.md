@@ -8,6 +8,7 @@ Adaptive execution orchestration without reimplementing basic retry, circuit-bre
 * **Hedged execution** — percentile-driven secondary attempts with shared cancellation, amplification limits, and idempotency warnings
 * **Execution budgets** — monotonic deadlines with nested reservations, cleanup, and impossible-allocation prevention
 * **Checkpointed batch execution** — bounded concurrency with explicit checkpoint persistence, resume, and partial-failure reporting
+* **Retry budget** — token-budget gate that admits retries without amplifying outages
 
 ## Runtime dependencies
 
