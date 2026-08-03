@@ -7,6 +7,7 @@ cd "$ROOT"
 
 export DOTNET_NOLOGO="${DOTNET_NOLOGO:-1}"
 export DOTNET_CLI_TELEMETRY_OPTOUT="${DOTNET_CLI_TELEMETRY_OPTOUT:-1}"
+export FF_RELEASE_PACK="${FF_RELEASE_PACK:-true}"
 
 RELEASE_DIR="$ROOT/Release"
 STAGE_BIN="$RELEASE_DIR/bin"
@@ -18,15 +19,15 @@ rm -rf "$RELEASE_DIR"
 mkdir -p "$STAGE_BIN" "$STAGE_PACKAGES"
 
 echo "==> Restoring"
-dotnet restore FunctionFoundry.slnx
+dotnet restore --locked-mode FunctionFoundry.slnx
 
 echo "==> Building Release"
-dotnet build FunctionFoundry.slnx -c Release --no-restore
+dotnet build FunctionFoundry.slnx -c Release --no-restore -p:VersionSuffix=
 
 echo "==> Packing NuGet packages"
 rm -rf "$ROOT/artifacts/packages"
 mkdir -p "$ROOT/artifacts/packages"
-dotnet pack FunctionFoundry.slnx -c Release --no-build -o "$ROOT/artifacts/packages"
+dotnet pack FunctionFoundry.slnx -c Release --no-build -o "$ROOT/artifacts/packages" -p:VersionSuffix=
 
 echo "==> Collecting library binaries"
 shopt -s nullglob

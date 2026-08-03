@@ -280,6 +280,7 @@ public sealed class StreamingHashManifestBuilder
     /// <exception cref="ArgumentException">Thrown when the path is unsafe or size metadata is disallowed.</exception>
     public ManifestEntry AddEntry(string relativePath, Stream content, bool includeSize = true)
     {
+        ArgumentNullException.ThrowIfNull(content);
         string normalized = PathSafety.NormalizeRelativePath(relativePath);
         (string hashHex, long size) = StreamingHashManifest.HashStream(content, _algorithm);
         long? recordedSize = includeSize && _metadataPolicy.AllowFileSize ? size : null;

@@ -4,14 +4,24 @@ Thank you for contributing. This repository builds specialized .NET libraries, n
 
 ## Development setup
 
-1. Install .NET SDK **10.0.301** exactly (see `global.json`).
+1. Install .NET SDK **10.0.302** exactly (see `global.json`).
 2. Restore, build, and test:
 
 ```bash
-dotnet restore
+dotnet restore --locked-mode
 dotnet build -c Release
 dotnet test -c Release --collect:"XPlat Code Coverage"
 dotnet pack -c Release
+```
+
+Release packs without the `-local` suffix:
+
+```bash
+# Linux / macOS
+FF_RELEASE_PACK=true ./build/publish-release.sh
+
+# Windows
+set FF_RELEASE_PACK=true&& build\publish-release.cmd
 ```
 
 ## Coding standards

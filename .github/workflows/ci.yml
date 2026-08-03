@@ -14,7 +14,11 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,26 +29,34 @@ jobs:
           global-json-file: global.json
 
       - name: Verify pinned SDK
+        shell: bash
         run: |
           SDK_VERSION=$(dotnet --version)
           echo "Installed SDK: $SDK_VERSION"
-          test "$SDK_VERSION" = "10.0.301"
+          EXPECTED=$(python -c "import json; print(json.load(open('global.json'))['sdk']['version'])")
+          test "$SDK_VERSION" = "$EXPECTED"
 
-      - name: Restore (locked mode when lock files exist)
-        run: |
-          if find . -name 'packages.lock.json' | grep -q .; then
-            dotnet restore --locked-mode
-          else
-            dotnet restore
-          fi
+      - name: Restore (locked mode)
+        run: dotnet restore --locked-mode
 
       - name: Verify formatting
+        if: matrix.os == 'ubuntu-latest'
         run: dotnet format --verify-no-changes --verbosity diagnostic
 
       - name: Build Release
         run: dotnet build -c Release --no-restore
 
+      - name: Build samples
+        shell: bash
+        run: |
+          set -e
+          for proj in samples/*/*.csproj; do
+            echo "=== Building $proj ==="
+            dotnet build -c Release --no-restore "$proj"
+          done
+
       - name: Test with coverage
+        shell: bash
         run: |
           set +e
           FAILURES=0
@@ -78,12 +90,72 @@ jobs:
             exit 1
           fi
 
+      - name: Enforce line coverage threshold
+        if: matrix.os == 'ubuntu-latest'
+        shell: bash
+        run: |
+          python3 <<'PY'
+          import pathlib, sys, xml.etree.ElementTree as ET
+
+          threshold = 85.0
+          files = list(pathlib.Path("artifacts/test-results").rglob("coverage.cobertura.xml"))
+          if not files:
+              print("::error::No cobertura coverage files found.", file=sys.stderr)
+              sys.exit(1)
+
+          # Deduplicate by package name so multi-project Coverlet runs do not double-count.
+          package_stats: dict[str, tuple[int, int]] = {}
+          for path in files:
+              root = ET.parse(path).getroot()
+              for package in root.findall(".//package"):
+                  name = package.attrib.get("name", "")
+                  if not name or ".Tests" in name or ".Sample" in name or ".Benchmarks" in name:
+                      continue
+                  if "FunctionFoundry." not in name:
+                      continue
+                  covered = 0
+                  valid = 0
+                  for line in package.findall(".//line"):
+                      valid += 1
+                      if int(line.attrib.get("hits", "0")) > 0:
+                          covered += 1
+                  previous = package_stats.get(name)
+                  if previous is None or valid > previous[1]:
+                      package_stats[name] = (covered, valid)
+
+          if not package_stats:
+              # Fallback to document totals when package names are unavailable.
+              covered = valid = 0
+              for path in files:
+                  root = ET.parse(path).getroot()
+                  covered += int(float(root.attrib.get("lines-covered", "0")))
+                  valid += int(float(root.attrib.get("lines-valid", "0")))
+          else:
+              covered = sum(c for c, _ in package_stats.values())
+              valid = sum(v for _, v in package_stats.values())
+              for name, (c, v) in sorted(package_stats.items()):
+                  pct_pkg = 100.0 * c / v if v else 0.0
+                  print(f"  {name}: {pct_pkg:.1f}% ({c}/{v})")
+
+          if valid == 0:
+              print("::error::Coverage files contained zero valid lines.", file=sys.stderr)
+              sys.exit(1)
+
+          pct = 100.0 * covered / valid
+          print(f"Aggregated line coverage: {pct:.2f}% ({covered}/{valid}) across {len(package_stats) or len(files)} packages/files")
+          if pct + 1e-9 < threshold:
+              print(f"::error::Line coverage {pct:.2f}% is below required {threshold:.1f}%.", file=sys.stderr)
+              sys.exit(1)
+          PY
+
       - name: Pack
+        if: matrix.os == 'ubuntu-latest'
         run: |
           mkdir -p artifacts/packages
           dotnet pack -c Release --no-build -o artifacts/packages
 
       - name: Upload artifacts
+        if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
           name: packages-and-tests
@@ -100,4 +172,3 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/dependency-review-action@v4
-        continue-on-error: true

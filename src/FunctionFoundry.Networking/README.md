@@ -13,6 +13,8 @@ Downloads large objects using HTTP range requests when available:
 * ETag / Last-Modified validation
 * persistent checkpoint format
 * configurable parallelism
+* adaptive chunk sizing within min/max bounds (throughput-smoothed)
+* corrupt-chunk repair (length mismatch + optional full-digest repair passes)
 * partial-file integrity and final cryptographic verification
 * safe restart after interruption
 * capability detection and correct fallback when ranges are unsupported

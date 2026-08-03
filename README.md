@@ -1,10 +1,10 @@
 # FunctionFoundry
 
 [![CI](https://github.com/Chookees/FunctionFoundry/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Chookees/FunctionFoundry/actions/workflows/ci.yml)
-[![.NET](https://img.shields.io/badge/.NET-10.0.301-512BD4?logo=dotnet&logoColor=white)](global.json)
-[![Tests](https://img.shields.io/badge/tests-224%20passed-brightgreen)](docs/coverage-summary.md)
-[![Coverage](https://img.shields.io/badge/coverage-84.8%25%20line-yellowgreen)](docs/coverage-summary.md)
-[![Branch Coverage](https://img.shields.io/badge/branch%20coverage-72.3%25-yellowgreen)](docs/coverage-summary.md)
+[![.NET](https://img.shields.io/badge/.NET-10.0.302-512BD4?logo=dotnet&logoColor=white)](global.json)
+[![Tests](https://img.shields.io/badge/tests-242%20passed-brightgreen)](docs/coverage-summary.md)
+[![Coverage](https://img.shields.io/badge/coverage-85.8%25%20line-brightgreen)](docs/coverage-summary.md)
+[![Branch Coverage](https://img.shields.io/badge/branch%20coverage-remeasure-lightgrey)](docs/coverage-summary.md)
 [![Skipped](https://img.shields.io/badge/skipped-0-brightgreen)](docs/coverage-summary.md)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Packages](https://img.shields.io/badge/packages-10%20independent-blue)](#packages)
@@ -32,11 +32,13 @@ Each product has a dedicated README under `src/<Package>/README.md` describing e
 
 ## Requirements
 
-* .NET SDK **10.0.301** (pinned in `global.json`; roll-forward disabled)
+* .NET SDK **10.0.302** (pinned in `global.json`; roll-forward disabled)
 * Target framework: `net10.0`
 * C# 14.0
 
 SDK versions receive explicit maintenance upgrades only. Do not silently change the pinned feature band.
+
+Local `dotnet pack` produces `*-local` package versions by design. Release packs (CI or `FF_RELEASE_PACK=true` / publish workflow) omit the suffix.
 
 ## Build
 

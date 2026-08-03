@@ -7,7 +7,7 @@
 * `tests/` — per-package xUnit projects + Engineering.Tests
 * `samples/` / `benchmarks/` — per-package executables
 * `docs/adr`, `docs/packages`, CI under `.github/workflows`
-* Central build: `Directory.Build.props/targets`, `Directory.Packages.props`, `global.json` (10.0.301)
+* Central build: `Directory.Build.props/targets`, `Directory.Packages.props`, `global.json` (**10.0.302**)
 
 ## 2. Delivered packages
 
@@ -40,17 +40,18 @@ Listed above (also `git log --grep='\[PBI-'`).
 
 ## 6. Test counts and coverage
 
-* **182** tests passed (`dotnet test -c Release`)
-* Breakdown: Engineering 3, Security 12, Storage 33, Integrity 36, Observability 22, Data 13, Text 13, Resilience 14, Networking 10, Distributed 16, Scheduling 10
-* Formal cobertura threshold gate not numerically asserted in CI YAML (tests pass; coverage collector configured)
+* **242** unit tests passed on remediation branch (pre-remediation baseline was 224 in `docs/coverage-summary.md`)
+* Line coverage baseline **84.8%**, branch **72.3%** (pre-remediation figures)
+* CI now enforces ≥**85%** aggregated line coverage and builds all samples
+* Branch coverage remains below the aspirational ≥90% critical-algorithm target; Distributed and Integrity received additional tests on the remediation branch
 
 ## 7. Benchmark summary
 
-BenchmarkDotNet projects exist for all ten packages. Initial baseline environment: .NET 10.0.301 / linux-x64. Benchmarks were compiled; long full BenchmarkDotNet runs were not used as CI gates.
+BenchmarkDotNet projects exist for all ten packages. Benchmarks compile; long full BenchmarkDotNet runs are not CI gates.
 
 ## 8. DLL and NuGet sizes
 
-See `docs/packages/size-and-compatibility-report-v1.md` (Storage nupkg ~47KB largest; Security ~21KB smallest).
+See `docs/packages/size-and-compatibility-report-v1.md`.
 
 ## 9. Runtime dependency list
 
@@ -60,8 +61,7 @@ See `docs/packages/size-and-compatibility-report-v1.md` (Storage nupkg ~47KB lar
 ## 10. Security review summary
 
 * Security package uses only BCL crypto (AES-GCM, HMAC-SHA256, RNG)
-* Auth failures clear plaintext buffers; fixed-time compare helper
-* Threat model in ADR-0005 and package docs; no formal proof claims
+* Threat model in ADR-0005; private reporting via GitHub Security Advisories (see `SECURITY.md`)
 * Secret scanner / redaction are heuristic and documented as such
 
 ## 11. XML documentation status
@@ -72,28 +72,27 @@ See `docs/packages/size-and-compatibility-report-v1.md` (Storage nupkg ~47KB lar
 ## 12. Package-validation status
 
 * `EnablePackageValidation=true` for packable projects
-* First release: no prior baseline package to validate against
+* Baseline version should be set to published `1.0.0` after the clean NuGet publish (not the accidental `1.0.0-local`)
 
 ## 13. Generated artifact locations
 
-* `artifacts/packages/FunctionFoundry.*.1.0.0.nupkg` (+ `.snupkg`)
+* `artifacts/packages/FunctionFoundry.*.nupkg` (+ `.snupkg`)
 * `artifacts/bin/**/release/*.dll`
+* Release bundle via `build/publish-release.*` (sets `FF_RELEASE_PACK=true` for clean versions)
 
-## 14. Tags / releases that succeeded
+## 14. Tags / releases
 
-* Git tag **`v1.0.0`** pushed to origin
-* NuGet.org publish: **not performed** (no publish credentials/permission invoked)
-* GitHub Release asset upload: not claimed
+* Git tag **`1.0.0`** on origin (docs previously said `v1.0.0`; the published tag has no `v` prefix)
+* NuGet.org: accidental **`1.0.0-local`** present; clean **`1.0.0`** publish pending `NUGET_API_KEY` + Publish workflow
+* GitHub Release `1.0.0` exists (verify release notes reference `Chookees/FunctionFoundry`, not prior repo names)
 
 ## 15. Deviations
 
 * Cloud branch naming `cursor/...-482e` instead of `pbi/...`
 * PBI commit order on main not strictly 01→12
-* Separate `v0.5.0` tag omitted; Feature 1 hardening folded into `8a90d76` / v1.0 docs
+* Separate `v0.5.0` tag omitted
 * Unicode confusables: compact subset, not full UCD
-* Some Networking adaptive-repair behaviors are partial (documented by implementers)
-* CI does not yet fail on cobertura % threshold numbers
-* `IsAotCompatible` not claimed
+* SDK maintenance upgrade **10.0.301 → 10.0.302**
 
 ## 16. Remaining known risks
 

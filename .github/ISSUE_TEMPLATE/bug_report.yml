@@ -1,0 +1,49 @@
+name: Bug report
+description: Report a defect in a FunctionFoundry package
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      options:
+        - FunctionFoundry.Security
+        - FunctionFoundry.Storage
+        - FunctionFoundry.Integrity
+        - FunctionFoundry.Observability
+        - FunctionFoundry.Data
+        - FunctionFoundry.Text
+        - FunctionFoundry.Resilience
+        - FunctionFoundry.Networking
+        - FunctionFoundry.Distributed
+        - FunctionFoundry.Scheduling
+        - Repository / CI / docs
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      placeholder: 1.0.0
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What went wrong?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: Minimal code or steps to reproduce.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true

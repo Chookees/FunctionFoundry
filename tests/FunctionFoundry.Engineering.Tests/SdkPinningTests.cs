@@ -10,7 +10,7 @@ public sealed class SdkPinningTests
         string path = FindRepoFile("global.json");
         using JsonDocument document = JsonDocument.Parse(File.ReadAllText(path));
         JsonElement sdk = document.RootElement.GetProperty("sdk");
-        Assert.Equal("10.0.301", sdk.GetProperty("version").GetString());
+        Assert.Equal("10.0.302", sdk.GetProperty("version").GetString());
         Assert.Equal("disable", sdk.GetProperty("rollForward").GetString());
         Assert.False(sdk.GetProperty("allowPrerelease").GetBoolean());
     }

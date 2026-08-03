@@ -1,0 +1,36 @@
+name: Feature request
+description: Propose a capability for a FunctionFoundry package
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      options:
+        - FunctionFoundry.Security
+        - FunctionFoundry.Storage
+        - FunctionFoundry.Integrity
+        - FunctionFoundry.Observability
+        - FunctionFoundry.Data
+        - FunctionFoundry.Text
+        - FunctionFoundry.Resilience
+        - FunctionFoundry.Networking
+        - FunctionFoundry.Distributed
+        - FunctionFoundry.Scheduling
+        - New package / cross-cutting
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What specialized capability is missing that the BCL does not already provide well?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: API sketch, guarantees, and non-goals.
+    validations:
+      required: true

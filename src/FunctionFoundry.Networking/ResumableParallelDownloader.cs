@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
 
@@ -29,7 +30,13 @@ public sealed record DownloadCheckpoint(
 /// <param name="Verified">Whether final digest verification succeeded.</param>
 /// <param name="ResumedFromCheckpoint">Whether a prior checkpoint was used.</param>
 /// <param name="UsedRangeRequests">Whether range requests were used.</param>
-public sealed record DownloadResult(long BytesWritten, bool Verified, bool ResumedFromCheckpoint, bool UsedRangeRequests);
+/// <param name="RepairedChunkCount">Number of chunks re-downloaded during corrupt-chunk repair.</param>
+public sealed record DownloadResult(
+    long BytesWritten,
+    bool Verified,
+    bool ResumedFromCheckpoint,
+    bool UsedRangeRequests,
+    int RepairedChunkCount = 0);
 
 /// <summary>
 /// Options for <see cref="ResumableParallelDownloader"/>.
@@ -57,6 +64,18 @@ public sealed class ResumableParallelDownloaderOptions
     public int MaxParallelism { get; set; } = 4;
 
     /// <summary>
+    /// Gets or sets whether chunk size may grow or shrink within min/max based on observed throughput.
+    /// Defaults to <see langword="true"/>.
+    /// </summary>
+    public bool EnableAdaptiveChunkSizing { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets the maximum number of full-object repair passes after digest verification fails.
+    /// Defaults to 1.
+    /// </summary>
+    public int MaxRepairPasses { get; set; } = 1;
+
+    /// <summary>
     /// Validates option ranges.
     /// </summary>
     public void Validate()
@@ -74,6 +93,11 @@ public sealed class ResumableParallelDownloaderOptions
         if (MaxParallelism <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(MaxParallelism), "MaxParallelism must be positive.");
+        }
+
+        if (MaxRepairPasses < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(MaxRepairPasses), "MaxRepairPasses cannot be negative.");
         }
     }
 }
@@ -124,13 +148,14 @@ public sealed class InMemoryDownloadCheckpointStore : IDownloadCheckpointStore
 }
 
 /// <summary>
-/// Downloads content with resumable HTTP range support and integrity verification.
+/// Downloads content with resumable HTTP range support, adaptive chunk sizing, and integrity-aware repair.
 /// </summary>
 public sealed class ResumableParallelDownloader
 {
     private readonly HttpClient _httpClient;
     private readonly IDownloadCheckpointStore _checkpointStore;
     private readonly ResumableParallelDownloaderOptions _options;
+    private int _adaptiveChunkSizeBytes;
 
     /// <summary>
     /// Initializes a new downloader using the caller-provided <see cref="HttpClient"/>.
@@ -147,12 +172,18 @@ public sealed class ResumableParallelDownloader
         _checkpointStore = checkpointStore ?? throw new ArgumentNullException(nameof(checkpointStore));
         _options = options ?? new ResumableParallelDownloaderOptions();
         _options.Validate();
+        _adaptiveChunkSizeBytes = _options.InitialChunkSizeBytes;
     }
 
     /// <summary>
     /// Gets the configured options.
     /// </summary>
     public ResumableParallelDownloaderOptions Options => _options;
+
+    /// <summary>
+    /// Gets the current adaptive chunk size recommendation in bytes.
+    /// </summary>
+    public int AdaptiveChunkSizeBytes => _adaptiveChunkSizeBytes;
 
     /// <summary>
     /// Downloads content into a seekable <paramref name="destination"/> stream.
@@ -189,6 +220,7 @@ public sealed class ResumableParallelDownloader
         {
             totalSize = probeResponse.Content.Headers.ContentLength ?? 0;
         }
+
         string? etag = probeResponse.Headers.ETag?.Tag;
         string? lastModified = probeResponse.Content.Headers.LastModified?.ToString("R");
 
@@ -200,16 +232,17 @@ public sealed class ResumableParallelDownloader
             resumed = false;
         }
 
-        int chunkSize = existing?.ChunkSizeBytes ?? _options.InitialChunkSizeBytes;
+        int chunkSize = existing?.ChunkSizeBytes ?? ChooseChunkSize(totalSize);
         TransferPlan plan = TransferPlan.Create(totalSize, chunkSize);
-        HashSet<int> completed = existing?.CompletedChunkIndices.ToHashSet() ?? new HashSet<int>();
-        using StreamingIntegrityVerifier verifier = new();
+        HashSet<int> completed = existing?.CompletedChunkIndices.ToHashSet() ?? [];
+        int repairedChunkCount = 0;
 
         if (!supportsRanges || totalSize <= 0)
         {
             byte[] full = await DownloadFullAsync(url, cancellationToken).ConfigureAwait(false);
             destination.SetLength(0);
             await destination.WriteAsync(full, cancellationToken).ConfigureAwait(false);
+            using StreamingIntegrityVerifier verifier = new();
             verifier.AppendChunk(0, full);
             FullVerificationResult verification = verifier.VerifyFull(expectedSha256Hex);
             await SaveCheckpointAsync(url, totalSize, etag, lastModified, chunkSize, completed, supportsRanges, cancellationToken).ConfigureAwait(false);
@@ -221,9 +254,80 @@ public sealed class ResumableParallelDownloader
             destination.SetLength(totalSize);
         }
 
+        await DownloadChunksAsync(url, destination, plan, completed, etag, cancellationToken).ConfigureAwait(false);
+
+        FullVerificationResult fullVerification = await VerifyDestinationAsync(destination, plan, expectedSha256Hex, cancellationToken).ConfigureAwait(false);
+        for (int repairPass = 0; !fullVerification.IsValid && repairPass < _options.MaxRepairPasses; repairPass++)
+        {
+            IReadOnlyList<TransferChunkAssignment> repair = plan.GetRepairAssignments(plan.Chunks.Select(static c => c.Index));
+            if (repair.Count == 0)
+            {
+                break;
+            }
+
+            foreach (TransferChunkAssignment chunk in repair)
+            {
+                completed.Remove(chunk.Index);
+            }
+
+            await DownloadChunksAsync(url, destination, plan, completed, etag, cancellationToken).ConfigureAwait(false);
+            repairedChunkCount += repair.Count;
+            fullVerification = await VerifyDestinationAsync(destination, plan, expectedSha256Hex, cancellationToken).ConfigureAwait(false);
+        }
+
+        await SaveCheckpointAsync(url, totalSize, etag, lastModified, chunkSize, completed, supportsRanges, cancellationToken).ConfigureAwait(false);
+        return new DownloadResult(totalSize, fullVerification.IsValid, resumed, true, repairedChunkCount);
+    }
+
+    private int ChooseChunkSize(long totalSizeBytes)
+    {
+        int candidate = _options.EnableAdaptiveChunkSizing ? _adaptiveChunkSizeBytes : _options.InitialChunkSizeBytes;
+        if (_options.EnableAdaptiveChunkSizing && totalSizeBytes > 0)
+        {
+            // Prefer fewer chunks for large objects and smaller chunks for tiny objects.
+            if (totalSizeBytes < _options.MinChunkSizeBytes * 4L)
+            {
+                candidate = Math.Min(candidate, _options.MinChunkSizeBytes);
+            }
+            else if (totalSizeBytes > _options.MaxChunkSizeBytes * 8L)
+            {
+                candidate = Math.Max(candidate, Math.Min(_options.MaxChunkSizeBytes, _options.InitialChunkSizeBytes * 2));
+            }
+        }
+
+        return Math.Clamp(candidate, _options.MinChunkSizeBytes, _options.MaxChunkSizeBytes);
+    }
+
+    private void ObserveChunkThroughput(int bytes, TimeSpan elapsed)
+    {
+        if (!_options.EnableAdaptiveChunkSizing || bytes <= 0 || elapsed <= TimeSpan.Zero)
+        {
+            return;
+        }
+
+        double bytesPerSecond = bytes / Math.Max(elapsed.TotalSeconds, 0.001);
+        // Target roughly 250–750 ms per chunk.
+        const double targetSeconds = 0.5;
+        int suggested = (int)Math.Clamp(bytesPerSecond * targetSeconds, _options.MinChunkSizeBytes, _options.MaxChunkSizeBytes);
+        // Smooth toward the suggestion to avoid oscillation.
+        _adaptiveChunkSizeBytes = (_adaptiveChunkSizeBytes + suggested) / 2;
+        _adaptiveChunkSizeBytes = Math.Clamp(_adaptiveChunkSizeBytes, _options.MinChunkSizeBytes, _options.MaxChunkSizeBytes);
+    }
+
+    private async Task DownloadChunksAsync(
+        Uri url,
+        Stream destination,
+        TransferPlan plan,
+        HashSet<int> completed,
+        string? etag,
+        CancellationToken cancellationToken)
+    {
         IReadOnlyList<TransferChunkAssignment> pending = plan.GetPendingChunks(completed);
         using SemaphoreSlim gate = new(_options.MaxParallelism, _options.MaxParallelism);
+        using SemaphoreSlim ioGate = new(1, 1);
         List<Task> workers = [];
+        List<int> failedChunks = [];
+        object failedLock = new();
 
         foreach (TransferChunkAssignment chunk in pending)
         {
@@ -232,26 +336,25 @@ public sealed class ResumableParallelDownloader
 
         await Task.WhenAll(workers).ConfigureAwait(false);
 
-        foreach (TransferChunkAssignment chunk in plan.Chunks.OrderBy(static c => c.Index))
+        if (failedChunks.Count > 0)
         {
-            destination.Position = chunk.Offset;
-            byte[] buffer = new byte[chunk.Length];
-            int read = await destination.ReadAsync(buffer.AsMemory(0, chunk.Length), cancellationToken).ConfigureAwait(false);
-            if (read > 0)
+            IReadOnlyList<TransferChunkAssignment> repair = plan.GetRepairAssignments(failedChunks);
+            List<Task> repairWorkers = [];
+            foreach (TransferChunkAssignment chunk in repair)
             {
-                verifier.AppendChunk(chunk.Index, buffer.AsSpan(0, read));
+                completed.Remove(chunk.Index);
+                repairWorkers.Add(DownloadChunkAsync(chunk));
             }
-        }
 
-        FullVerificationResult fullVerification = verifier.VerifyFull(expectedSha256Hex);
-        await SaveCheckpointAsync(url, totalSize, etag, lastModified, chunkSize, completed, supportsRanges, cancellationToken).ConfigureAwait(false);
-        return new DownloadResult(totalSize, fullVerification.IsValid, resumed, true);
+            await Task.WhenAll(repairWorkers).ConfigureAwait(false);
+        }
 
         async Task DownloadChunkAsync(TransferChunkAssignment chunk)
         {
             await gate.WaitAsync(cancellationToken).ConfigureAwait(false);
             try
             {
+                Stopwatch timer = Stopwatch.StartNew();
                 using HttpRequestMessage request = new(HttpMethod.Get, url);
                 long end = chunk.Offset + chunk.Length - 1;
                 request.Headers.Range = new RangeHeaderValue(chunk.Offset, end);
@@ -265,18 +368,55 @@ public sealed class ResumableParallelDownloader
                 byte[] data = await response.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
                 if (data.Length != chunk.Length)
                 {
-                    throw new InvalidOperationException($"Chunk {chunk.Index} length mismatch.");
+                    lock (failedLock)
+                    {
+                        failedChunks.Add(chunk.Index);
+                    }
+
+                    return;
                 }
 
-                destination.Position = chunk.Offset;
-                await destination.WriteAsync(data, cancellationToken).ConfigureAwait(false);
-                completed.Add(chunk.Index);
+                await ioGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+                try
+                {
+                    destination.Position = chunk.Offset;
+                    await destination.WriteAsync(data, cancellationToken).ConfigureAwait(false);
+                    completed.Add(chunk.Index);
+                }
+                finally
+                {
+                    ioGate.Release();
+                }
+
+                timer.Stop();
+                ObserveChunkThroughput(data.Length, timer.Elapsed);
             }
             finally
             {
                 gate.Release();
             }
         }
+    }
+
+    private static async Task<FullVerificationResult> VerifyDestinationAsync(
+        Stream destination,
+        TransferPlan plan,
+        string expectedSha256Hex,
+        CancellationToken cancellationToken)
+    {
+        using StreamingIntegrityVerifier verifier = new();
+        foreach (TransferChunkAssignment chunk in plan.Chunks.OrderBy(static c => c.Index))
+        {
+            destination.Position = chunk.Offset;
+            byte[] buffer = new byte[chunk.Length];
+            int read = await destination.ReadAsync(buffer.AsMemory(0, chunk.Length), cancellationToken).ConfigureAwait(false);
+            if (read > 0)
+            {
+                verifier.AppendChunk(chunk.Index, buffer.AsSpan(0, read));
+            }
+        }
+
+        return verifier.VerifyFull(expectedSha256Hex);
     }
 
     private async Task<byte[]> DownloadFullAsync(Uri url, CancellationToken cancellationToken)
