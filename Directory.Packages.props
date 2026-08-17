@@ -16,6 +16,6 @@
   </ItemGroup>
 
   <ItemGroup Label="Build">
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.301" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.400" />
   </ItemGroup>
 </Project>
