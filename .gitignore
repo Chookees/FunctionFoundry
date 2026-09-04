@@ -47,3 +47,6 @@ BenchmarkDotNet.Artifacts/
 # Allow documentation under docs/packages (NuGet packages live in artifacts/packages)
 !docs/packages/
 !docs/packages/**
+
+# Cursor agents and skills
+**/.cursor
