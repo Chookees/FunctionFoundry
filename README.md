@@ -1,7 +1,7 @@
 # FunctionFoundry
 
 [![CI](https://github.com/Chookees/FunctionFoundry/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Chookees/FunctionFoundry/actions/workflows/ci.yml)
-[![.NET](https://img.shields.io/badge/.NET-10.0.302-512BD4?logo=dotnet&logoColor=white)](global.json)
+[![.NET](https://img.shields.io/badge/.NET-10.0.403-512BD4?logo=dotnet&logoColor=white)](global.json)
 [![Tests](https://img.shields.io/badge/tests-271%20passed-brightgreen)](docs/coverage-summary.md)
 [![Coverage](https://img.shields.io/badge/coverage-85.8%25%20line-brightgreen)](docs/coverage-summary.md)
 [![Branch Coverage](https://img.shields.io/badge/branch%20coverage-remeasure-lightgrey)](docs/coverage-summary.md)
@@ -32,7 +32,7 @@ Each product has a dedicated README under `src/<Package>/README.md` describing e
 
 ## Requirements
 
-* .NET SDK **10.0.302** (pinned in `global.json`; roll-forward disabled)
+* .NET SDK **10.0.403** (pinned in `global.json`; roll-forward disabled; runtime 10.0.14)
 * Target framework: `net10.0`
 * C# 14.0
 
