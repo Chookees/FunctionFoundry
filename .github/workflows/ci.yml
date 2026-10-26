@@ -28,6 +28,9 @@ jobs:
         with:
           global-json-file: global.json
 
+      - name: Show .NET info
+        run: dotnet --info
+
       - name: Verify pinned SDK
         shell: bash
         run: |

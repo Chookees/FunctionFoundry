@@ -2,6 +2,8 @@
 
 Measured with Coverlet Cobertura on a Release `net10.0` build (SDK **10.0.302**), aggregated by unique package name (same methodology as CI).
 
+Note: SDK pin later raised to **10.0.403** / runtime 10.0.14 for CVE-2026-111497; remeasure coverage under the new SDK when convenient.
+
 **Unit tests:** 242 passed, 0 failed, 0 skipped.
 
 ## Overall

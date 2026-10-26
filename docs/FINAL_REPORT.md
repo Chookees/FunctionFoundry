@@ -7,7 +7,7 @@
 * `tests/` — per-package xUnit projects + Engineering.Tests
 * `samples/` / `benchmarks/` — per-package executables
 * `docs/adr`, `docs/packages`, CI under `.github/workflows`
-* Central build: `Directory.Build.props/targets`, `Directory.Packages.props`, `global.json` (**10.0.302**)
+* Central build: `Directory.Build.props/targets`, `Directory.Packages.props`, `global.json` (**10.0.302**; note: SDK pin later raised to **10.0.403** / runtime 10.0.14 for CVE-2026-111497)
 
 ## 2. Delivered packages
 
@@ -92,7 +92,7 @@ See `docs/packages/size-and-compatibility-report-v1.md`.
 * PBI commit order on main not strictly 01→12
 * Separate `v0.5.0` tag omitted
 * Unicode confusables: compact subset, not full UCD
-* SDK maintenance upgrade **10.0.301 → 10.0.302**
+* SDK maintenance upgrade **10.0.301 → 10.0.302** (later raised to **10.0.403** / runtime 10.0.14 for CVE-2026-111497)
 
 ## 16. Remaining known risks
 
