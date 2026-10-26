@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
-- SDK pin raised to 10.0.403 (runtime 10.0.14) for CVE-2026-111497.
+* SDK pin raised to 10.0.403 (runtime 10.0.14) for CVE-2026-111497 (GHSA-p3jp-9v83-76w9).
 
 ## [1.1.0] - 2026-08-03
 
