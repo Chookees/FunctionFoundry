@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+* SDK pin raised to 10.0.404 (runtime 10.0.15) for the November 10, 2026 .NET security update. SDK 10.0.403 is in the affected 10.0.4xx range. The release includes the DiaSymReader remote code execution fixes and CVE-2026-105544. `rollForward` stays `disable`.
+* `Microsoft.NET.Test.Sdk` raised from 18.11.0 to 18.11.1 on the same servicing line for CVE-2026-105544 (GHSA-6856-87hx-p5x7).
 * SDK pin raised to 10.0.403 (runtime 10.0.14) for CVE-2026-111497 (GHSA-p3jp-9v83-76w9).
 
 ## [1.1.0] - 2026-08-03

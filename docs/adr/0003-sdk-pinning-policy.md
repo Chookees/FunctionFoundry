@@ -2,7 +2,7 @@
 
 * **Status:** Accepted
 * **Date:** 2026-07-14
-* **Updated:** 2026-10-26
+* **Updated:** 2026-11-12
 * **Deciders:** FunctionFoundry architects
 
 ## Context
@@ -11,7 +11,7 @@ Silent SDK roll-forward can change analyzer behavior, pack outputs, and language
 
 ## Decision
 
-* Pin SDK `10.0.403` in `global.json` (security/maintenance upgrade from `10.0.302`; runtime 10.0.14 for CVE-2026-111497).
+* Pin SDK `10.0.404` in `global.json` (security upgrade from `10.0.403`; runtime 10.0.15 for the November 10, 2026 .NET security update).
 * Set `rollForward` to `disable`.
 * Target `net10.0` and C# 14.0.
 * Treat future SDK moves as explicit maintenance upgrades with changelog notes and CI verification.

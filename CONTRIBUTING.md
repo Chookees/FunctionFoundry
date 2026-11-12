@@ -4,7 +4,7 @@ Thank you for contributing. This repository builds specialized .NET libraries, n
 
 ## Development setup
 
-1. Install .NET SDK **10.0.403** exactly (see `global.json`).
+1. Install .NET SDK **10.0.404** exactly (see `global.json`).
 2. Restore, build, and test:
 
 ```bash
